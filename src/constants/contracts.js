@@ -129,34 +129,193 @@ export const STAKING_CONTRACT_ADDRESS = '0x35A09e66ef690dc843968c7199aBEd4f6c490
 
 export const STAKING_CONTRACT_ABI = [
   // View functions
-  'function PRANA() view returns (address)',
-  'function MIN_STAKE() view returns (uint256)',
-  'function DAY() view returns (uint32)',
-  'function gracePeriod() view returns (uint32)',
-  'function earlyUnstakePenaltyPercent() view returns (uint8)',
-  'function aprByDuration(uint32 duration) view returns (uint8)',
-  'function userStakes(address user, uint256 index) view returns (uint32 id, uint256 amount, uint32 startTime, uint32 duration, uint8 apr, uint32 lastClaimTime)',
-  'function getAllAPRs() view returns (uint32[] durations, uint8[] aprs)',
-  'function getStakerStakes(address staker) view returns (tuple(uint32 id, uint256 amount, uint32 startTime, uint32 duration, uint8 apr, uint32 lastClaimTime)[])',
+  {
+    "name": "PRANA",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "address"}]
+  },
+  {
+    "name": "MIN_STAKE",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "uint256"}]
+  },
+  {
+    "name": "DAY",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "uint32"}]
+  },
+  {
+    "name": "gracePeriod",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "uint32"}]
+  },
+  {
+    "name": "earlyUnstakePenaltyPercent",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "uint8"}]
+  },
+  {
+    "name": "aprByDuration",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [{"name": "duration", "type": "uint32"}],
+    "outputs": [{"type": "uint8"}]
+  },
+  {
+    "name": "userStakes",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      {"name": "user", "type": "address"},
+      {"name": "index", "type": "uint256"}
+    ],
+    "outputs": [
+      {"name": "id", "type": "uint32"},
+      {"name": "amount", "type": "uint256"},
+      {"name": "startTime", "type": "uint32"},
+      {"name": "duration", "type": "uint32"},
+      {"name": "apr", "type": "uint8"},
+      {"name": "lastClaimTime", "type": "uint32"}
+    ]
+  },
+  {
+    "name": "getAllAPRs",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      {"name": "durations", "type": "uint32[]"},
+      {"name": "aprs", "type": "uint8[]"}
+    ]
+  },
+  {
+    "name": "getStakerStakes",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [{"name": "staker", "type": "address"}],
+    "outputs": [{
+      "type": "tuple[]",
+      "components": [
+        {"name": "id", "type": "uint32"},
+        {"name": "amount", "type": "uint256"},
+        {"name": "startTime", "type": "uint32"},
+        {"name": "duration", "type": "uint32"},
+        {"name": "apr", "type": "uint8"},
+        {"name": "lastClaimTime", "type": "uint32"}
+      ]
+    }]
+  },
   
   // Write functions
-  'function stakeWithPermit(uint256 amount, uint32 duration, uint32 deadline, uint8 v, bytes32 r, bytes32 s)',
-  'function claimInterest(uint32 stakeId)',
-  'function unstake(uint32 stakeId)',
-  'function unstakeEarly(uint32 stakeId)',
+  {
+    "name": "stakeWithPermit",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {"name": "amount", "type": "uint256"},
+      {"name": "duration", "type": "uint32"},
+      {"name": "deadline", "type": "uint32"},
+      {"name": "v", "type": "uint8"},
+      {"name": "r", "type": "bytes32"},
+      {"name": "s", "type": "bytes32"}
+    ],
+    "outputs": []
+  },
+  {
+    "name": "claimInterest",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [{"name": "stakeId", "type": "uint32"}],
+    "outputs": []
+  },
+  {
+    "name": "unstake",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [{"name": "stakeId", "type": "uint32"}],
+    "outputs": []
+  },
+  {
+    "name": "unstakeEarly",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [{"name": "stakeId", "type": "uint32"}],
+    "outputs": []
+  },
   
   // Events
-  'event StakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 duration, uint8 apr, uint32 startTime)',
-  'event InterestClaimed(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 timePassed, uint32 claimTime)',
-  'event UnstakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 duration, uint32 unstakeTime)'
+  {
+    "name": "StakedPRANA",
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "user", "type": "address"},
+      {"indexed": true, "name": "stakeId", "type": "uint32"},
+      {"indexed": false, "name": "amount", "type": "uint256"},
+      {"indexed": false, "name": "duration", "type": "uint32"},
+      {"indexed": false, "name": "apr", "type": "uint8"},
+      {"indexed": false, "name": "startTime", "type": "uint32"}
+    ]
+  },
+  {
+    "name": "InterestClaimed",
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "user", "type": "address"},
+      {"indexed": true, "name": "stakeId", "type": "uint32"},
+      {"indexed": false, "name": "amount", "type": "uint256"},
+      {"indexed": false, "name": "timePassed", "type": "uint32"},
+      {"indexed": false, "name": "claimTime", "type": "uint32"}
+    ]
+  },
+  {
+    "name": "UnstakedPRANA",
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "user", "type": "address"},
+      {"indexed": true, "name": "stakeId", "type": "uint32"},
+      {"indexed": false, "name": "amount", "type": "uint256"},
+      {"indexed": false, "name": "duration", "type": "uint32"},
+      {"indexed": false, "name": "unstakeTime", "type": "uint32"}
+    ]
+  }
 ];
 
 // Interest Contract
 export const INTEREST_CONTRACT_ADDRESS = '0x3389a6CCEd6fB6956d297E889823CB6066C8f036'; // Replace with actual contract address
 
 export const INTEREST_CONTRACT_ABI = [
-  // View functions
-  'function PRANA() view returns (address)',
-  'function PranaStakingContract() view returns (address)',
-  'function getWithdrawableAmount() view returns (uint256)'
+  {
+    "name": "PRANA",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "address"}]
+  },
+  {
+    "name": "PranaStakingContract",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "address"}]
+  },
+  {
+    "name": "getWithdrawableAmount",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "uint256"}]
+  }
 ]; 
