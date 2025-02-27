@@ -2,6 +2,7 @@ import React from 'react';
 import { useAccount } from 'wagmi';
 import ConnectWallet from './components/ConnectWallet';
 import PranaBalance from './components/PranaBalance';
+import StakingForm from './components/StakingForm';
 
 function App() {
   const { isConnected } = useAccount();
@@ -17,6 +18,7 @@ function App() {
         {isConnected ? (
           <div className="card">
             <PranaBalance />
+            <StakingForm />
           </div>
         ) : (
           <div className="card">

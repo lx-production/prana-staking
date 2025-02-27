@@ -101,6 +101,15 @@ export const PRANA_TOKEN_ABI = [
     "outputs": []
   },
   
+  // Required for EIP-2612 permit signing
+  {
+    "name": "nonces",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [{"name": "owner", "type": "address"}],
+    "outputs": [{"type": "uint256"}]
+  },
+  
   // Events
   {
     "name": "Transfer",
