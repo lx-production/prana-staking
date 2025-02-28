@@ -261,13 +261,14 @@ const StakingForm = () => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="stake-duration">Duration & APR</label>
+        <div id="duration-label" className="form-label">Duration & APR</div>
         <DurationSlider
           durationIndex={durationIndex}
           setDurationIndex={setDurationIndex}
           durationOptions={DURATION_OPTIONS}
           aprs={aprs}
           disabled={loading || !!permitSignature}
+          labelId="duration-label"
         />
       </div>
 

@@ -23,6 +23,28 @@ function ActiveStakes() {
     enabled: isConnected,
   });
   
+  // Helper function to calculate interest
+  const calculateInterest = (stake) => {
+    const now = Math.floor(Date.now() / 1000);
+    const PERCENT_SCALE = 100; // Same as in the contract
+    
+    // Calculate time passed since last claim or start time
+    // Cap the time at the end of the staking period
+    const stakeEndTime = Number(stake.startTime) + Number(stake.duration);
+    const effectiveTime = Math.min(now, stakeEndTime);
+    const timePassed = effectiveTime - Number(stake.lastClaimTime);
+    
+    if (timePassed <= 0) return 0;
+    
+    // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
+    const ratePerSecond = (Number(stake.apr) * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
+    
+    // Calculate interest: principal * ratePerSecond * secondsPassed / 1e18
+    const interest = (BigInt(stake.amount) * BigInt(Math.floor(ratePerSecond * timePassed))) / BigInt(1e18);
+    
+    return formatUnits(interest, decimals);
+  };
+  
   // Fetch user's stakes
   const { data: stakesData, isLoading: isStakesLoading, refetch: refetchStakes } = useReadContract({
     address: STAKING_CONTRACT_ADDRESS,
@@ -206,7 +228,10 @@ function ActiveStakes() {
                     style={{ width: `${stake.progress}%` }}
                   ></div>
                 </div>
-                <div className="progress-text">{stake.progress}% Complete</div>
+                <div className="progress-info">
+                  <div className="progress-text">{stake.progress}% Complete</div>
+                  <div className="interest-text">Interest earned: <strong>{calculateInterest(stake)}</strong> PRANA</div>
+                </div>
               </div>
               
               <div className="stake-actions">

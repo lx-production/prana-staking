@@ -153,6 +153,16 @@ button {
   align-items: center;
 }
 
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .input-with-button {
   display: flex;
   align-items: center;
@@ -421,6 +431,23 @@ button {
   font-size: 0.75rem;
   color: var(--text-secondary);
   text-align: right;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.interest-text {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.interest-text strong {
+  color: var(--primary-color);
 }
 
 .stake-actions {

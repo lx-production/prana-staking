@@ -7,11 +7,13 @@ const DurationSlider = ({
   setDurationIndex, 
   durationOptions, 
   aprs, 
-  disabled 
+  disabled,
+  labelId 
 }) => {
   return (
     <Box sx={{ width: '100%', padding: '20px 10px' }}>
       <Slider
+        aria-labelledby={labelId}
         aria-label="Staking Duration"
         value={durationIndex}
         onChange={(_, newValue) => setDurationIndex(Number(newValue))}
