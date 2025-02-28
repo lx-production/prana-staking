@@ -7,19 +7,13 @@ import { useStakingActions } from '../hooks/useStakingActions';
 
 function ActiveStakes() {
   const { address, isConnected } = useAccount();
-  const { status } = useWriteContract();
   
   // State
   const [stakes, setStakes] = useState([]);
   const [loading, setLoading] = useState(false);
   
-  // Fetch token decimals
-  const { data: decimals = 9 } = useReadContract({
-    address: PRANA_TOKEN_ADDRESS,
-    abi: PRANA_TOKEN_ABI,
-    functionName: 'decimals',
-    enabled: isConnected,
-  });
+  // Hardcoded decimals value instead of fetching from blockchain
+  const decimals = 9;
   
   // Helper function to calculate interest
   const calculateInterest = (stake) => {

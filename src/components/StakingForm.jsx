@@ -20,14 +20,11 @@ const StakingForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [aprs, setAprs] = useState({});
+  
+  // Hardcoded decimals value instead of fetching from blockchain
+  const decimals = 9;
 
   // Data fetching
-  const { data: decimals = 9 } = useReadContract({
-    address: PRANA_TOKEN_ADDRESS,
-    abi: PRANA_TOKEN_ABI,
-    functionName: 'decimals',
-    enabled: isConnected,
-  });
   const { data: minStake } = useReadContract({
     address: STAKING_CONTRACT_ADDRESS,
     abi: STAKING_CONTRACT_ABI,

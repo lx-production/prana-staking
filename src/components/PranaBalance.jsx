@@ -23,18 +23,8 @@ const PranaBalance = () => {
     console.error("Balance error:", error);
   }
 
-  // Get token decimals
-  const { data: decimals = 9, error: decimalsError } = useReadContract({
-    address: PRANA_TOKEN_ADDRESS,
-    abi: PRANA_TOKEN_ABI,
-    functionName: 'decimals',
-    enabled: isConnected && !!address,
-  });
-  
-  // Log any decimals errors for debugging
-  if (decimalsError) {
-    console.error("Decimals error:", decimalsError);
-  }
+  // Hardcoded decimals value instead of fetching from blockchain
+  const decimals = 9;
 
   if (!isConnected) return null;
 
