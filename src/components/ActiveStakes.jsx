@@ -3,17 +3,15 @@ import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI, PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
+import { useStakingActions } from '../hooks/useStakingActions';
 
 function ActiveStakes() {
   const { address, isConnected } = useAccount();
-  const { writeContractAsync, status } = useWriteContract();
+  const { status } = useWriteContract();
   
   // State
   const [stakes, setStakes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [actionLoading, setActionLoading] = useState(null);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   
   // Fetch token decimals
   const { data: decimals = 9 } = useReadContract({
@@ -54,6 +52,16 @@ function ActiveStakes() {
     enabled: isConnected && !!address,
   });
   
+  // Get staking actions from custom hook
+  const { 
+    handleUnstake, 
+    handleEarlyUnstake, 
+    handleClaimInterest,
+    actionLoading,
+    error,
+    success
+  } = useStakingActions(refetchStakes);
+  
   // Process stakes data
   useEffect(() => {
     if (stakesData) {
@@ -88,94 +96,10 @@ function ActiveStakes() {
     }
   }, [stakesData, decimals]);
   
-  // Reset messages after 5 seconds
-  useEffect(() => {
-    if (error || success) {
-      const timer = setTimeout(() => {
-        setError('');
-        setSuccess('');
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [error, success]);
-  
   // Set loading state
   useEffect(() => {
     setLoading(isStakesLoading);
   }, [isStakesLoading]);
-  
-  // Handle unstake
-  const handleUnstake = async (stakeId) => {
-    try {
-      setActionLoading(stakeId);
-      setError('');
-      
-      const txHash = await writeContractAsync({
-        address: STAKING_CONTRACT_ADDRESS,
-        abi: STAKING_CONTRACT_ABI,
-        functionName: 'unstake',
-        args: [stakeId]
-      });
-      
-      setSuccess(`Unstaked successfully! Transaction: ${txHash.slice(0, 10)}...`);
-      refetchStakes();
-    } catch (err) {
-      console.error('Unstake error:', err);
-      setError(`Failed to unstake: ${err.message}`);
-    } finally {
-      setActionLoading(null);
-    }
-  };
-  
-  // Handle early unstake
-  const handleEarlyUnstake = async (stakeId) => {
-    if (!window.confirm('Early unstaking incurs a 10% penalty. Are you sure you want to continue?')) {
-      return;
-    }
-    
-    try {
-      setActionLoading(stakeId);
-      setError('');
-      
-      const txHash = await writeContractAsync({
-        address: STAKING_CONTRACT_ADDRESS,
-        abi: STAKING_CONTRACT_ABI,
-        functionName: 'unstakeEarly',
-        args: [stakeId]
-      });
-      
-      setSuccess(`Unstaked early successfully! Transaction: ${txHash.slice(0, 10)}...`);
-      refetchStakes();
-    } catch (err) {
-      console.error('Early unstake error:', err);
-      setError(`Failed to unstake early: ${err.message}`);
-    } finally {
-      setActionLoading(null);
-    }
-  };
-  
-  // Handle claim interest
-  const handleClaimInterest = async (stakeId) => {
-    try {
-      setActionLoading(stakeId);
-      setError('');
-      
-      const txHash = await writeContractAsync({
-        address: STAKING_CONTRACT_ADDRESS,
-        abi: STAKING_CONTRACT_ABI,
-        functionName: 'claimInterest',
-        args: [stakeId]
-      });
-      
-      setSuccess(`Interest claimed successfully! Transaction: ${txHash.slice(0, 10)}...`);
-      refetchStakes();
-    } catch (err) {
-      console.error('Claim interest error:', err);
-      setError(`Failed to claim interest: ${err.message}`);
-    } finally {
-      setActionLoading(null);
-    }
-  };
   
   if (!isConnected) return null;
   
