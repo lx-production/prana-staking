@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
-import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI, PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI } from '../constants/contracts';
+import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
 import { useStakingActions } from '../hooks/useStakingActions';
 
@@ -15,6 +15,23 @@ function ActiveStakes() {
   
   // PRANA's decimals. Hardcoded decimals value instead of fetching from blockchain
   const decimals = 9;
+  
+  // Helper function to format timestamps to Vietnam time with 24h format
+  const formatVietnamTime = (timestamp) => {
+    // Create date from timestamp (multiply by 1000 to convert seconds to milliseconds)
+    const date = new Date(Number(timestamp) * 1000);
+    
+    // Format for Vietnam timezone (UTC+7)
+    return date.toLocaleString('en-GB', { 
+      timeZone: 'Asia/Ho_Chi_Minh',
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  };
   
   // Helper function to calculate interest
   const calculateInterest = (stake) => {
@@ -85,8 +102,8 @@ function ActiveStakes() {
         return {
           ...stake,
           amountFormatted: formatUnits(stake.amount, decimals),
-          startTimeFormatted: new Date(Number(stake.startTime) * 1000).toLocaleDateString(),
-          endTimeFormatted: new Date(endTime * 1000).toLocaleDateString(),
+          startTimeFormatted: formatVietnamTime(stake.startTime),
+          endTimeFormatted: formatVietnamTime(endTime),
           durationLabel: durationOption.label,
           isExpired,
           canUnstake,
