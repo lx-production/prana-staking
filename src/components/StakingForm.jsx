@@ -3,6 +3,7 @@ import { useAccount, useReadContract, useWriteContract, useSignTypedData, usePub
 import { parseUnits, formatUnits } from 'viem';
 import { PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI, STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
+import DurationSlider from './DurationSlider';
 
 const StakingForm = () => {
   const { address, isConnected } = useAccount();
@@ -187,7 +188,7 @@ const StakingForm = () => {
 
   const handleStake = async () => {
     if (!permitSignature || !transactionArgs) {
-      setError('Please sign the permit first');
+      setError('Please sign the permit first - Bạn cần ký permit trước');
       return;
     }
     
@@ -205,7 +206,7 @@ const StakingForm = () => {
       });
       
       console.log('Transaction hash:', txHash);
-      setSuccess(`Staking successful! Transaction: ${txHash.slice(0, 10)}...`);
+      setSuccess(`Staking successful! Stake thành công! Transaction: ${txHash.slice(0, 10)}...`);
       
       // Reset form after successful stake
       setAmount('');
@@ -260,36 +261,18 @@ const StakingForm = () => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="stake-duration">Duration</label>
-        <select
-          id="stake-duration"
-          value={durationIndex}
-          onChange={(e) => setDurationIndex(Number(e.target.value))}
+        <label htmlFor="stake-duration">Duration & APR</label>
+        <DurationSlider
+          durationIndex={durationIndex}
+          setDurationIndex={setDurationIndex}
+          durationOptions={DURATION_OPTIONS}
+          aprs={aprs}
           disabled={loading || !!permitSignature}
-          className="form-select"
-        >
-          {DURATION_OPTIONS.map((option, index) => (
-            <option key={option.seconds} value={index}>
-              {option.label} {aprs[option.seconds] !== undefined && `(${aprs[option.seconds]}% APR)`}
-            </option>
-          ))}
-        </select>
+        />
       </div>
 
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
-
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        .spinner {
-          display: inline-block;
-          animation: spin 1.5s linear infinite;
-          margin-right: 6px;
-        }
-      `}</style>
 
       <div className="action-buttons">
         <button 

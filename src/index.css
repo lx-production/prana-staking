@@ -120,6 +120,13 @@ button {
   }
 }
 
+/* Spinner animation for loading states */
+.spinner {
+  display: inline-block;
+  animation: spin 1.5s linear infinite;
+  margin-right: 6px;
+}
+
 /* StakingForm Styles */
 .staking-form {
   margin-top: 1.5rem;
