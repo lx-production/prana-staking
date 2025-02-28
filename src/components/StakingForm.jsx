@@ -170,7 +170,7 @@ const StakingForm = () => {
       // Set transaction arguments for staking
       setTransactionArgs(args);
       
-      setSuccess('Permit signed successfully! You can now stake.');
+      setSuccess('Permit signed successfully! You can now Stake! - Permit thành công! Bạn có thể stake PRANA ngay!');
     } catch (err) {
       console.error('Permit signing error:', err);
       if (err.message?.includes('User rejected') || 
@@ -279,13 +279,29 @@ const StakingForm = () => {
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
 
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .spinner {
+          display: inline-block;
+          animation: spin 1.5s linear infinite;
+          margin-right: 6px;
+        }
+      `}</style>
+
       <div className="action-buttons">
         <button 
           className="btn-primary"
           onClick={handlePermit} 
           disabled={loading || !amount || !!permitSignature}
         >
-          {loading && isSignPending ? 'Signing...' : 'Sign Permit'}
+          {loading && isSignPending ? (
+            <><span className="spinner">↻</span>Signing...</>
+          ) : (
+            permitSignature ? 'Permit Signed ✓' : 'Sign Permit'
+          )}
         </button>
         
         <button 
@@ -293,7 +309,9 @@ const StakingForm = () => {
           onClick={handleStake} 
           disabled={loading || !permitSignature}
         >
-          {loading && status === 'pending' ? 'Staking...' : 'Stake'}
+          {loading && status === 'pending' ? (
+            <><span className="spinner">↻</span>Staking...</>
+          ) : 'Stake'}
         </button>
       </div>
     </div>
