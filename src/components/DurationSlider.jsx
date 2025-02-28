@@ -33,6 +33,9 @@ const DurationSlider = ({
             whiteSpace: 'pre-line',
             textAlign: 'center',
           },
+          '.MuiSlider-valueLabel': {
+            backgroundColor: 'primary.main',
+          }
         }}
       />
     </Box>

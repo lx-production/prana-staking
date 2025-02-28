@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi';
 import ConnectWallet from './components/ConnectWallet';
 import PranaBalance from './components/PranaBalance';
 import StakingForm from './components/StakingForm';
+import ActiveStakes from './components/ActiveStakes';
 
 function App() {
   const { isConnected } = useAccount();
@@ -19,6 +20,7 @@ function App() {
           <div className="card">
             <PranaBalance />
             <StakingForm />
+            <ActiveStakes />
           </div>
         ) : (
           <div className="card">

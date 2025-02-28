@@ -238,7 +238,7 @@ const StakingForm = () => {
   if (!isConnected) return null;
   
   return (
-    <div className="staking-form">
+    <div className="staking-form" key="staking-form">
       <h3>Stake PRANA</h3>
       
       <div className="form-group">
