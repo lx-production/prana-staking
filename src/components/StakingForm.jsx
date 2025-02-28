@@ -70,7 +70,7 @@ const StakingForm = () => {
       const timer = setTimeout(() => {
         setError('');
         setSuccess('');
-      }, 5000);
+      }, 10000);
       return () => clearTimeout(timer);
     }
   }, [error, success]);
