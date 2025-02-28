@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useWriteContract } from 'wagmi';
+import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 
 /**
@@ -12,6 +13,41 @@ export const useStakingActions = (refetchStakes) => {
   const [actionLoading, setActionLoading] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
+  
+  // PRANA's decimals. Hardcoded to 9
+  const decimals = 9;
+  
+  // Update time every second to recalculate interest
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(Math.floor(Date.now() / 1000));
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+  
+  // Helper function to calculate interest
+  const calculateInterest = (stake) => {
+    const now = currentTime;
+    const PERCENT_SCALE = 100; // Same as in the contract
+    
+    // Calculate time passed since last claim or start time
+    // Cap the time at the end of the staking period
+    const stakeEndTime = Number(stake.startTime) + Number(stake.duration);
+    const effectiveTime = Math.min(now, stakeEndTime);
+    const timePassed = effectiveTime - Number(stake.lastClaimTime);
+    
+    if (timePassed <= 0) return 0;
+    
+    // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
+    const ratePerSecond = (Number(stake.apr) * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
+    
+    // Calculate interest: principal * ratePerSecond * secondsPassed / 1e18
+    const interest = (BigInt(stake.amount) * BigInt(Math.floor(ratePerSecond * timePassed))) / BigInt(1e18);
+    
+    return formatUnits(interest, decimals);
+  };
 
   // Reset messages after 10 seconds
   useEffect(() => {
@@ -101,6 +137,8 @@ export const useStakingActions = (refetchStakes) => {
     handleUnstake,
     handleEarlyUnstake,
     handleClaimInterest,
+    calculateInterest,
+    currentTime,
     actionLoading,
     error,
     success,

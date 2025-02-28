@@ -11,7 +11,6 @@ function ActiveStakes() {
   // State
   const [stakes, setStakes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
   
   // PRANA's decimals. Hardcoded decimals value instead of fetching from blockchain
   const decimals = 9;
@@ -33,37 +32,6 @@ function ActiveStakes() {
     });
   };
   
-  // Helper function to calculate interest
-  const calculateInterest = (stake) => {
-    const now = currentTime;
-    const PERCENT_SCALE = 100; // Same as in the contract
-    
-    // Calculate time passed since last claim or start time
-    // Cap the time at the end of the staking period
-    const stakeEndTime = Number(stake.startTime) + Number(stake.duration);
-    const effectiveTime = Math.min(now, stakeEndTime);
-    const timePassed = effectiveTime - Number(stake.lastClaimTime);
-    
-    if (timePassed <= 0) return 0;
-    
-    // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
-    const ratePerSecond = (Number(stake.apr) * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
-    
-    // Calculate interest: principal * ratePerSecond * secondsPassed / 1e18
-    const interest = (BigInt(stake.amount) * BigInt(Math.floor(ratePerSecond * timePassed))) / BigInt(1e18);
-    
-    return formatUnits(interest, decimals);
-  };
-  
-  // Update time every second to recalculate interest
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(Math.floor(Date.now() / 1000));
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
-  
   // Fetch user's stakes
   const { data: stakesData, isLoading: isStakesLoading, refetch: refetchStakes } = useReadContract({
     address: STAKING_CONTRACT_ADDRESS,
@@ -78,6 +46,7 @@ function ActiveStakes() {
     handleUnstake, 
     handleEarlyUnstake, 
     handleClaimInterest,
+    calculateInterest,
     actionLoading,
     error,
     success
