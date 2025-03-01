@@ -122,7 +122,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         require(stakes.length > 0, "No stakes found");
         
         // Finding a stake by ID becomes a simple lookup
-        uint32 stakeIndex = stakeIdToIndex[msg.sender][stakeId];
+        uint32 stakeIndex = stakeIdToIndex[msg.sender][stakeId];   // 0 
         require(stakeIndex < stakes.length && 
                 stakes[stakeIndex].id == stakeId, "Stake ID not found");
 

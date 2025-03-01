@@ -73,7 +73,7 @@ export const useStakingActions = (refetchStakes) => {
         args: [stakeId]
       });
       
-      setSuccess(`Unstaked successfully! Transaction: ${txHash.slice(0, 10)}...`);
+      setSuccess(`Unstaked successfully! Unstake thành công! Transaction: ${txHash.slice(0, 10)}...`);
       refetchStakes();
     } catch (err) {
       console.error('Unstake error:', err);
@@ -120,7 +120,8 @@ export const useStakingActions = (refetchStakes) => {
         address: STAKING_CONTRACT_ADDRESS,
         abi: STAKING_CONTRACT_ABI,
         functionName: 'claimInterest',
-        args: [stakeId]
+        args: [stakeId],
+        overrides: { gasLimit: 100000 } // Adjust gas limit as appropriate
       });
       
       setSuccess(`Interest claimed successfully! Transaction: ${txHash.slice(0, 10)}...`);
