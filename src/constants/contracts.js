@@ -134,7 +134,7 @@ export const PRANA_TOKEN_ABI = [
 ];
 
 // Staking Contract
-export const STAKING_CONTRACT_ADDRESS = '0x96F3f5A5a3E50b472D1B664CE5Da5dbc3FFd70f8'; // Replace with actual contract address
+export const STAKING_CONTRACT_ADDRESS = '0x30236dB04c0C4E88bFA0c1c926CDaA47780100d0'; // Replace with actual contract address
 
 export const STAKING_CONTRACT_ABI = [
   // View functions
@@ -303,7 +303,7 @@ export const STAKING_CONTRACT_ABI = [
 ];
 
 // Interest Contract
-export const INTEREST_CONTRACT_ADDRESS = '0x77c5E212438dEe075A8A3AD51cC80648192E1867'; // Replace with actual contract address
+export const INTEREST_CONTRACT_ADDRESS = '0x2eb3F2E678c20BD73634a895858D3c1E8aFA9ceF'; // Replace with actual contract address
 
 export const INTEREST_CONTRACT_ABI = [
   // View functions

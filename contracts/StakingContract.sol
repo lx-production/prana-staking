@@ -19,11 +19,11 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     IPranaToken public PRANA;
     IInterestContract public InterestContract;
 
-    uint256 public MIN_STAKE = 100 * 1e9;            // 100 PRANA with 9 decimals
+    uint256 public MIN_STAKE = 100 * 1e9;             // 100 PRANA with 9 decimals
     uint256 public constant DAY = 86400;              // 24 hours in seconds
-    uint8 public constant PERCENT_SCALE = 100;       // For percentage scaling (since APRs are integers like 10 for 10%)
+    uint8 public constant PERCENT_SCALE = 100;        // For percentage scaling (since APRs are integers like 10 for 10%)
     uint256 public gracePeriod = 7 * DAY;             // 7 days grace period after stake expiry
-    uint8 public earlyUnstakePenaltyPercent = 10;    // 10% penalty for unstaking early
+    uint8 public earlyUnstakePenaltyPercent = 10;     // 10% penalty for unstaking early
 
     // Mapping of staking duration (in seconds) to APR (e.g., 10 for 10%)
     mapping(uint256 => uint8) public aprByDuration;
@@ -143,11 +143,17 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         uint256 timePassed = effectiveTime - userStake.lastClaimTime;
         require(timePassed > 0, "No time passed since last claim");
 
-        // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
-        uint256 ratePerSecond = (userStake.apr * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
+        // Break down the calculation into smaller, safer parts
+        // APR is in percentage points (e.g., 5 for 5%)
+        // Calculate annual interest: principal * apr / PERCENT_SCALE (100)
+        uint256 annualInterest = (userStake.amount * userStake.apr) / PERCENT_SCALE;
         
-        // Calculate interest: principal * ratePerSecond * secondsPassed / 1e18
-        uint256 interest = (userStake.amount * ratePerSecond * timePassed) / 1e18;
+        // Calculate interest per second: annualInterest / seconds in a year
+        // We use 365 days = 31,536,000 seconds
+        uint256 interestPerSecond = annualInterest / (365 * 24 * 60 * 60);
+        
+        // Calculate the interest earned during the period
+        uint256 interest = interestPerSecond * timePassed;
         
         // Call InterestContract to pay interest
         InterestContract.payInterest(msg.sender, interest);
@@ -269,11 +275,17 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
                     // Calculate remaining time until maturity
                     uint256 remainingTime = (currentStake.startTime + currentStake.duration) - currentStake.lastClaimTime;
                     
-                    // Calculate rate per second
-                    uint256 ratePerSecond = (currentStake.apr * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
+                    // Break down the calculation into smaller, safer parts
+                    // APR is in percentage points (e.g., 5 for 5%)
+                    // Calculate annual interest: principal * apr / PERCENT_SCALE (100)
+                    uint256 annualInterest = (currentStake.amount * currentStake.apr) / PERCENT_SCALE;
                     
-                    // Calculate remaining interest for this stake
-                    uint256 stakeInterest = (currentStake.amount * ratePerSecond * remainingTime) / 1e18;
+                    // Calculate interest per second: annualInterest / seconds in a year
+                    // We use 365 days = 31,536,000 seconds
+                    uint256 interestPerSecond = annualInterest / (365 * 24 * 60 * 60);
+                    
+                    // Calculate the interest for the remaining period
+                    uint256 stakeInterest = interestPerSecond * remainingTime;
                     
                     totalInterest += stakeInterest;
                 }

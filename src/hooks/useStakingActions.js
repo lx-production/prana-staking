@@ -85,7 +85,7 @@ export const useStakingActions = (refetchStakes) => {
   
   // Handle early unstake
   const handleEarlyUnstake = async (stakeId) => {
-    if (!window.confirm('Early unstaking incurs a 10% penalty. Are you sure you want to continue?')) {
+    if (!window.confirm('Early unstaking incurs a 10% penalty. Are you sure you want to continue? Unstake sớm sẽ bị trừ 10% vốn gốc. Bạn có chắc chưa?')) {
       return;
     }
     
@@ -120,11 +120,10 @@ export const useStakingActions = (refetchStakes) => {
         address: STAKING_CONTRACT_ADDRESS,
         abi: STAKING_CONTRACT_ABI,
         functionName: 'claimInterest',
-        args: [stakeId],
-        overrides: { gasLimit: 100000 } // Adjust gas limit as appropriate
+        args: [stakeId]
       });
       
-      setSuccess(`Interest claimed successfully! Transaction: ${txHash.slice(0, 10)}...`);
+      setSuccess(`Claim interest transaction ${txHash} đã được gửi thành công.`);
       refetchStakes();
     } catch (err) {
       console.error('Claim interest error:', err);
