@@ -203,7 +203,7 @@ const StakingForm = () => {
       });
       
       console.log('Transaction hash:', txHash);
-      setSuccess(`Staking successful! Stake thành công! Transaction: ${txHash.slice(0, 10)}...`);
+      setSuccess(`Staking successful! Stake thành công! Transaction: ${txHash}`);
       
       // Reset form after successful stake
       setAmount('');
