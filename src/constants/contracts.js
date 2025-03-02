@@ -134,7 +134,7 @@ export const PRANA_TOKEN_ABI = [
 ];
 
 // Staking Contract
-export const STAKING_CONTRACT_ADDRESS = '0xF8cCAFaE4cB57B01Ee6a1E8C4823583375F167DB'; // Replace with actual contract address
+export const STAKING_CONTRACT_ADDRESS = '0x96F3f5A5a3E50b472D1B664CE5Da5dbc3FFd70f8'; // Replace with actual contract address
 
 export const STAKING_CONTRACT_ABI = [
   // View functions
@@ -157,14 +157,14 @@ export const STAKING_CONTRACT_ABI = [
     "type": "function",
     "stateMutability": "view",
     "inputs": [],
-    "outputs": [{"type": "uint32"}]
+    "outputs": [{"type": "uint256"}]
   },
   {
     "name": "gracePeriod",
     "type": "function",
     "stateMutability": "view",
     "inputs": [],
-    "outputs": [{"type": "uint32"}]
+    "outputs": [{"type": "uint256"}]
   },
   {
     "name": "earlyUnstakePenaltyPercent",
@@ -177,7 +177,7 @@ export const STAKING_CONTRACT_ABI = [
     "name": "aprByDuration",
     "type": "function",
     "stateMutability": "view",
-    "inputs": [{"name": "duration", "type": "uint32"}],
+    "inputs": [{"name": "duration", "type": "uint256"}],
     "outputs": [{"type": "uint8"}]
   },
   {
@@ -191,10 +191,10 @@ export const STAKING_CONTRACT_ABI = [
     "outputs": [
       {"name": "id", "type": "uint32"},
       {"name": "amount", "type": "uint256"},
-      {"name": "startTime", "type": "uint32"},
-      {"name": "duration", "type": "uint32"},
+      {"name": "startTime", "type": "uint256"},
+      {"name": "duration", "type": "uint256"},
       {"name": "apr", "type": "uint8"},
-      {"name": "lastClaimTime", "type": "uint32"}
+      {"name": "lastClaimTime", "type": "uint256"}
     ]
   },
   {
@@ -203,7 +203,7 @@ export const STAKING_CONTRACT_ABI = [
     "stateMutability": "view",
     "inputs": [],
     "outputs": [
-      {"name": "durations", "type": "uint32[]"},
+      {"name": "durations", "type": "uint256[]"},
       {"name": "aprs", "type": "uint8[]"}
     ]
   },
@@ -217,10 +217,10 @@ export const STAKING_CONTRACT_ABI = [
       "components": [
         {"name": "id", "type": "uint32"},
         {"name": "amount", "type": "uint256"},
-        {"name": "startTime", "type": "uint32"},
-        {"name": "duration", "type": "uint32"},
+        {"name": "startTime", "type": "uint256"},
+        {"name": "duration", "type": "uint256"},
         {"name": "apr", "type": "uint8"},
-        {"name": "lastClaimTime", "type": "uint32"}
+        {"name": "lastClaimTime", "type": "uint256"}
       ]
     }]
   },
@@ -232,8 +232,8 @@ export const STAKING_CONTRACT_ABI = [
     "stateMutability": "nonpayable",
     "inputs": [
       {"name": "amount", "type": "uint256"},
-      {"name": "duration", "type": "uint32"},
-      {"name": "deadline", "type": "uint32"},
+      {"name": "duration", "type": "uint256"},
+      {"name": "deadline", "type": "uint256"},
       {"name": "v", "type": "uint8"},
       {"name": "r", "type": "bytes32"},
       {"name": "s", "type": "bytes32"}
@@ -271,9 +271,9 @@ export const STAKING_CONTRACT_ABI = [
       {"indexed": true, "name": "user", "type": "address"},
       {"indexed": true, "name": "stakeId", "type": "uint32"},
       {"indexed": false, "name": "amount", "type": "uint256"},
-      {"indexed": false, "name": "duration", "type": "uint32"},
+      {"indexed": false, "name": "duration", "type": "uint256"},
       {"indexed": false, "name": "apr", "type": "uint8"},
-      {"indexed": false, "name": "startTime", "type": "uint32"}
+      {"indexed": false, "name": "startTime", "type": "uint256"}
     ]
   },
   {
@@ -284,8 +284,8 @@ export const STAKING_CONTRACT_ABI = [
       {"indexed": true, "name": "user", "type": "address"},
       {"indexed": true, "name": "stakeId", "type": "uint32"},
       {"indexed": false, "name": "amount", "type": "uint256"},
-      {"indexed": false, "name": "timePassed", "type": "uint32"},
-      {"indexed": false, "name": "claimTime", "type": "uint32"}
+      {"indexed": false, "name": "timePassed", "type": "uint256"},
+      {"indexed": false, "name": "claimTime", "type": "uint256"}
     ]
   },
   {
@@ -296,14 +296,14 @@ export const STAKING_CONTRACT_ABI = [
       {"indexed": true, "name": "user", "type": "address"},
       {"indexed": true, "name": "stakeId", "type": "uint32"},
       {"indexed": false, "name": "amount", "type": "uint256"},
-      {"indexed": false, "name": "duration", "type": "uint32"},
-      {"indexed": false, "name": "unstakeTime", "type": "uint32"}
+      {"indexed": false, "name": "duration", "type": "uint256"},
+      {"indexed": false, "name": "unstakeTime", "type": "uint256"}
     ]
   }
 ];
 
 // Interest Contract
-export const INTEREST_CONTRACT_ADDRESS = '0x9FAD804C7C99c05008c63d5E766611F8F856Acbe'; // Replace with actual contract address
+export const INTEREST_CONTRACT_ADDRESS = '0x77c5E212438dEe075A8A3AD51cC80648192E1867'; // Replace with actual contract address
 
 export const INTEREST_CONTRACT_ABI = [
   // View functions

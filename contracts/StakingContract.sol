@@ -20,13 +20,13 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     IInterestContract public InterestContract;
 
     uint256 public MIN_STAKE = 100 * 1e9;            // 100 PRANA with 9 decimals
-    uint32 public constant DAY = 86400;              // 24 hours in seconds
+    uint256 public constant DAY = 86400;              // 24 hours in seconds
     uint8 public constant PERCENT_SCALE = 100;       // For percentage scaling (since APRs are integers like 10 for 10%)
-    uint32 public gracePeriod = 7 * DAY;             // 7 days grace period after stake expiry
+    uint256 public gracePeriod = 7 * DAY;             // 7 days grace period after stake expiry
     uint8 public earlyUnstakePenaltyPercent = 10;    // 10% penalty for unstaking early
 
     // Mapping of staking duration (in seconds) to APR (e.g., 10 for 10%)
-    mapping(uint32 => uint8) public aprByDuration;
+    mapping(uint256 => uint8) public aprByDuration;
 
     // Add counter for unique IDs
     uint32 private nextStakeId = 1;
@@ -35,22 +35,20 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     struct Stake {
         uint32 id;                 // Unique identifier for the stake
         uint256 amount;            // Principal staked
-        uint32 startTime;          // Stake start timestamp
-        uint32 duration;           // Staking duration in seconds
+        uint256 startTime;          // Stake start timestamp
+        uint256 duration;           // Staking duration in seconds
         uint8 apr;                 // APR at the time of staking (e.g., 5 for 5%)
-        uint32 lastClaimTime;      // Last time interest was claimed
+        uint256 lastClaimTime;      // Last time interest was claimed
     }
 
     // Mapping of user address to their array of stakes
     mapping(address => Stake[]) public userStakes;    
     address[] public stakers;
-    
-    mapping(address => mapping(uint32 => uint32)) private stakeIdToIndex;
 
-    event StakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 duration, uint8 apr, uint32 startTime);
-    event InterestClaimed(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 timePassed, uint32 claimTime);
-    event UnstakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 duration, uint32 unstakeTime);
-    event ForfeitedInterestTransferred(address indexed user, uint32 indexed stakeId, uint256 amount, uint32 stakeEndTime, uint32 forfeitTime);
+    event StakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 duration, uint8 apr, uint256 startTime);
+    event InterestClaimed(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 timePassed, uint256 claimTime);
+    event UnstakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 duration, uint256 unstakeTime);
+    event ForfeitedInterestTransferred(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 stakeEndTime, uint256 forfeitTime);
 
     // Emergency pause functionality
     bool public paused;    // false by default, save gas by not setting explicitly
@@ -85,7 +83,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     // @param r The r value of the permit signature
     // @param s The s value of the permit signature  
     // deadline, v, r, s values are returned from wallet.signTypedData from the UI
-    function stakeWithPermit(uint256 amount, uint32 duration, uint32 deadline, uint8 v, bytes32 r, bytes32 s) external nonReentrant whenNotPaused {    
+    function stakeWithPermit(uint256 amount, uint256 duration, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external nonReentrant whenNotPaused {    
         require(amount >= MIN_STAKE, "Stake amount must be at least 100 PRANA");
         require(aprByDuration[duration] > 0, "Invalid staking duration");
 
@@ -102,18 +100,17 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         }
         
         uint32 newId = nextStakeId++;
-        uint32 newIndex = uint32(userStakes[msg.sender].length);
-        stakeIdToIndex[msg.sender][newId] = newIndex;
+
         userStakes[msg.sender].push(Stake({
             id: newId,
             amount: amount,
-            startTime: uint32(block.timestamp),
+            startTime: block.timestamp,
             duration: duration,
             apr: apr,
-            lastClaimTime: uint32(block.timestamp)
+            lastClaimTime: block.timestamp
         }));
 
-        emit StakedPRANA(msg.sender, newId, amount, duration, apr, uint32(block.timestamp));        
+        emit StakedPRANA(msg.sender, newId, amount, duration, apr, block.timestamp);        
     }
 
     // @dev This function is used to claim interest for a specific stake
@@ -121,13 +118,19 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         Stake[] storage stakes = userStakes[msg.sender];
         require(stakes.length > 0, "No stakes found");
         
-        // Finding a stake by ID becomes a simple lookup
-        uint32 stakeIndex = stakeIdToIndex[msg.sender][stakeId];   // 0 
-        require(stakeIndex < stakes.length && 
-                stakes[stakeIndex].id == stakeId, "Stake ID not found");
+        // Find the stake by ID using a loop
+        uint32 stakeIndex = type(uint32).max;
+        for (uint32 i = 0; i < stakes.length; i++) {
+            if (stakes[i].id == stakeId) {
+                stakeIndex = i;
+                break;
+            }
+        }
+        
+        require(stakeIndex != type(uint32).max, "Stake ID not found");
 
         Stake storage userStake = stakes[stakeIndex];
-        uint32 stakeEndTime = userStake.startTime + userStake.duration;
+        uint256 stakeEndTime = userStake.startTime + userStake.duration;
         
         // Check if within claim period (from stake start until grace period after expiry)
         require(
@@ -136,8 +139,8 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         );
         
         // Calculate time passed, capping at stake end time if needed
-        uint32 effectiveTime = uint32(block.timestamp < stakeEndTime ? block.timestamp : stakeEndTime);
-        uint32 timePassed = effectiveTime - userStake.lastClaimTime;
+        uint256 effectiveTime = block.timestamp < stakeEndTime ? block.timestamp : stakeEndTime;
+        uint256 timePassed = effectiveTime - userStake.lastClaimTime;
         require(timePassed > 0, "No time passed since last claim");
 
         // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
@@ -157,26 +160,23 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         Stake[] storage stakes = userStakes[msg.sender];
         require(stakes.length > 0, "No stakes found");
 
-        // Finding a stake by ID becomes a simple lookup
-        uint32 stakeIndex = stakeIdToIndex[msg.sender][stakeId];
-        require(stakeIndex < stakes.length && stakes[stakeIndex].id == stakeId, "Stake ID not found");
+        // Find the stake by ID using a loop
+        uint32 stakeIndex = type(uint32).max;
+        for (uint32 i = 0; i < stakes.length; i++) {
+            if (stakes[i].id == stakeId) {
+                stakeIndex = i;
+                break;
+            }
+        }
+        
+        require(stakeIndex != type(uint32).max, "Stake ID not found");
 
         Stake memory userStake = stakes[stakeIndex];
         require(block.timestamp >= userStake.startTime + userStake.duration, "Staking period not ended");
 
         // When removing a stake
         uint32 lastIndex = uint32(stakes.length - 1);
-        uint32 lastStakeId = stakes[lastIndex].id;
-
-        // Update mapping for the last stake that's being moved
-        // If stakeIndex equals lastIndex, it means we're unstaking the last item, so there's no need to update the mapping since that stake will be removed anyway.
-        if (stakeIndex != lastIndex) {
-            stakeIdToIndex[msg.sender][lastStakeId] = stakeIndex;
-        }
-
-        // Delete the mapping entry for the removed stake
-        delete stakeIdToIndex[msg.sender][stakeId];
-
+        
         // Then do the array removal
         stakes[stakeIndex] = stakes[lastIndex];
         stakes.pop();
@@ -194,7 +194,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
             stakeId,
             userStake.amount,
             userStake.duration,
-            uint32(block.timestamp)
+            block.timestamp
         );
     }
 
@@ -203,10 +203,16 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         Stake[] storage stakes = userStakes[msg.sender];
         require(stakes.length > 0, "No stakes found");
         
-        // Finding a stake by ID becomes a simple lookup
-        uint32 stakeIndex = stakeIdToIndex[msg.sender][stakeId];
-        require(stakeIndex < stakes.length && 
-                stakes[stakeIndex].id == stakeId, "Stake ID not found");
+        // Find the stake by ID using a loop
+        uint32 stakeIndex = type(uint32).max;
+        for (uint32 i = 0; i < stakes.length; i++) {
+            if (stakes[i].id == stakeId) {
+                stakeIndex = i;
+                break;
+            }
+        }
+        
+        require(stakeIndex != type(uint32).max, "Stake ID not found");
 
         Stake memory userStake = stakes[stakeIndex];
         require(block.timestamp < userStake.startTime + userStake.duration, "Stake already matured, use unstake");
@@ -217,16 +223,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
 
         // When removing a stake
         uint32 lastIndex = uint32(stakes.length - 1);
-        uint32 lastStakeId = stakes[lastIndex].id;
-
-        // Update mapping for the last stake that's being moved
-        if (stakeIndex != lastIndex) {
-            stakeIdToIndex[msg.sender][lastStakeId] = stakeIndex;
-        }
-
-        // Delete the mapping entry for the removed stake
-        delete stakeIdToIndex[msg.sender][stakeId];
-
+        
         // Then do the array removal
         stakes[stakeIndex] = stakes[lastIndex];
         stakes.pop();
@@ -292,8 +289,8 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     }
 
     // Function to get all current APRs
-    function getAllAPRs() external view returns (uint32[] memory durations, uint8[] memory aprs) {
-        durations = new uint32[](6);
+    function getAllAPRs() external view returns (uint256[] memory durations, uint8[] memory aprs) {
+        durations = new uint256[](6);
         aprs = new uint8[](6);
         
         durations[0] = 1 * DAY;
@@ -311,7 +308,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     }
 
     // Function to update APR for a specific duration
-    function updateAPR(uint32 duration, uint8 newAPR) external onlyOwner {
+    function updateAPR(uint256 duration, uint8 newAPR) external onlyOwner {
         require(aprByDuration[duration] > 0, "Invalid duration");
         require(newAPR > 0 && newAPR <= 100, "APR must be between 1 and 100");
         
@@ -320,7 +317,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     }
 
     // Function to update multiple APRs at once
-    function updateMultipleAPRs(uint32[] calldata durations, uint8[] calldata newAPRs) external onlyOwner {
+    function updateMultipleAPRs(uint256[] calldata durations, uint8[] calldata newAPRs) external onlyOwner {
         require(durations.length == newAPRs.length, "Arrays length mismatch");
         
         for (uint256 i = 0; i < durations.length; i++) {
@@ -336,7 +333,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         MIN_STAKE = newMinStake;
     }
 
-    function setGracePeriod(uint32 _gracePeriod) external onlyOwner {
+    function setGracePeriod(uint256 _gracePeriod) external onlyOwner {
         gracePeriod = _gracePeriod;
     }
 
