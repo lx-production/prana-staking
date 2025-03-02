@@ -134,7 +134,7 @@ export const PRANA_TOKEN_ABI = [
 ];
 
 // Staking Contract
-export const STAKING_CONTRACT_ADDRESS = '0x35A09e66ef690dc843968c7199aBEd4f6c4906bA'; // Replace with actual contract address
+export const STAKING_CONTRACT_ADDRESS = '0x76c87693a7A74C3A5eEDA24920da3722B3153259'; // Replace with actual contract address
 
 export const STAKING_CONTRACT_ABI = [
   // View functions
@@ -303,9 +303,10 @@ export const STAKING_CONTRACT_ABI = [
 ];
 
 // Interest Contract
-export const INTEREST_CONTRACT_ADDRESS = '0x3389a6CCEd6fB6956d297E889823CB6066C8f036'; // Replace with actual contract address
+export const INTEREST_CONTRACT_ADDRESS = '0xd8Ec1D1589bc01AD53636cbd272Eeb546025f691'; // Replace with actual contract address
 
 export const INTEREST_CONTRACT_ABI = [
+  // View functions
   {
     "name": "PRANA",
     "type": "function",
@@ -321,10 +322,69 @@ export const INTEREST_CONTRACT_ABI = [
     "outputs": [{"type": "address"}]
   },
   {
+    "name": "stakingContractSet",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "bool"}]
+  },
+  {
     "name": "getWithdrawableAmount",
     "type": "function",
     "stateMutability": "view",
     "inputs": [],
     "outputs": [{"type": "uint256"}]
+  },
+  // Write functions
+  {
+    "name": "setStakingContract",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [{"name": "stakingContract", "type": "address"}],
+    "outputs": []
+  },
+  {
+    "name": "payInterest",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {"name": "user", "type": "address"},
+      {"name": "amount", "type": "uint256"}
+    ],
+    "outputs": []
+  },
+  {
+    "name": "withdrawExcessTokens",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [{"name": "amount", "type": "uint256"}],
+    "outputs": []
+  },
+  // Events
+  {
+    "name": "StakingContractSet",
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "stakingContract", "type": "address"}
+    ]
+  },
+  {
+    "name": "InterestPaid",
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "user", "type": "address"},
+      {"indexed": false, "name": "amount", "type": "uint256"}
+    ]
+  },
+  {
+    "name": "ExcessWithdrawn",
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "owner", "type": "address"},
+      {"indexed": false, "name": "amount", "type": "uint256"}
+    ]
   }
 ]; 
