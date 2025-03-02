@@ -78,7 +78,7 @@ function ActiveStakes() {
           canUnstake,
           canUnstakeEarly,
           canClaimInterest,
-          progress: Math.min(100, Math.floor(((now - stake.startTime) / stake.duration) * 100))
+          progress: Math.min(100, Math.floor(((now - Number(stake.startTime)) / Number(stake.duration)) * 100))
         };
       });
       
