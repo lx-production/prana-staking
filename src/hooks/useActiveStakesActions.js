@@ -8,7 +8,7 @@ import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/con
  * @param {function} refetchStakes - Function to refetch stakes after an action
  * @returns {object} - Contains action functions and states
  */
-export const useStakingActions = (refetchStakes) => {
+export const useActiveStakesActions = (refetchStakes) => {
   const { writeContractAsync } = useWriteContract();
   const [actionLoading, setActionLoading] = useState(null);
   const [error, setError] = useState('');
@@ -32,11 +32,11 @@ export const useStakingActions = (refetchStakes) => {
     const now = currentTime;
     const PERCENT_SCALE = 100; // Same as in the contract
     
-    // Calculate time passed since last claim or start time
+    // Calculate time passed since the stake started
     // Cap the time at the end of the staking period
     const stakeEndTime = Number(stake.startTime) + Number(stake.duration);
     const effectiveTime = Math.min(now, stakeEndTime);
-    const timePassed = effectiveTime - Number(stake.lastClaimTime);
+    const timePassed = effectiveTime - Number(stake.startTime);
     
     if (timePassed <= 0) return 0;
     

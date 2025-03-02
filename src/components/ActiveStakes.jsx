@@ -3,7 +3,7 @@ import { useAccount, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
-import { useStakingActions } from '../hooks/useStakingActions';
+import { useActiveStakesActions } from '../hooks/useActiveStakesActions';
 
 function ActiveStakes() {
   const { address, isConnected } = useAccount();
@@ -50,7 +50,7 @@ function ActiveStakes() {
     actionLoading,
     error,
     success
-  } = useStakingActions(refetchStakes);
+  } = useActiveStakesActions(refetchStakes);
   
   // Process stakes data
   useEffect(() => {
@@ -144,14 +144,14 @@ function ActiveStakes() {
                 </div>
                 <div className="progress-info">
                   <div className="progress-text">{stake.progress}% Complete</div>
-                  <div className="interest-text">Interest earned: <strong>{calculateInterest(stake)}</strong> PRANA</div>
+                  <div className="interest-text">Tổng lãi suất tích lũy: <strong>{calculateInterest(stake)}</strong> PRANA</div>
                 </div>
               </div>
               
               <div className="stake-actions">
                 {stake.canClaimInterest && (
                   <button 
-                    className="btn-primary"
+                    className="btn-secondary"
                     onClick={() => handleClaimInterest(stake.id)}
                     disabled={actionLoading === stake.id}
                   >

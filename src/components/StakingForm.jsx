@@ -62,7 +62,7 @@ const StakingForm = () => {
     setLoading(isSignPending || status === 'pending');
   }, [isSignPending, status]);
 
-  // Reset messages after 5 seconds
+  // Reset messages after 10 seconds
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
@@ -281,7 +281,7 @@ const StakingForm = () => {
           {loading && isSignPending ? (
             <><span className="spinner">↻</span>Signing...</>
           ) : (
-            permitSignature ? 'Permit Signed ✓' : 'Sign Permit'
+            permitSignature ? 'Permit Signed ✓' : 'Sign Permit (off-chain)'
           )}
         </button>
         
