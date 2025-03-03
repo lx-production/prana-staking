@@ -104,25 +104,32 @@ const StakingForm = () => {
     <div className="staking-form" key="staking-form">
       <h3>Stake PRANA</h3>
       
-      <div className="form-group">
-        <label htmlFor="stake-amount">Amount</label>
-        <input
-          id="stake-amount"
-          type="text"
-          value={amount}
-          onChange={(e) => {
-            // Only allow numbers and decimal points
-            const value = e.target.value;
-            if (value === '' || /^[0-9]*[.]?[0-9]*$/.test(value)) {
-              setAmount(value);
-            }
-          }}
-          placeholder={`Min: ${formattedMinStake}`}
-          disabled={loading}
-          className="form-input"
-        />
-        <div className="interest-text">
-          Tổng lãi đảm bảo tại đáo hạn: <strong>{getProjectedInterest()}</strong> PRANA
+      <div className="form-group stake-amount-group">
+        <div className="stake-input-section">
+          <label htmlFor="stake-amount">Amount</label>
+          <input
+            id="stake-amount"
+            type="text"
+            value={amount}
+            onChange={(e) => {
+              // Only allow numbers and decimal points
+              const value = e.target.value;
+              if (value === '' || /^[0-9]*[.]?[0-9]*$/.test(value)) {
+                setAmount(value);
+              }
+            }}
+            placeholder={`Min: ${formattedMinStake}`}
+            disabled={loading}
+            className="form-input"
+          />
+        </div>
+        <div className="stake-interest-preview">
+          <div className="preview-label">Expected Return</div>
+          <div className="preview-amount">
+            <strong>{getProjectedInterest()}</strong>
+            <span className="token-symbol">PRANA</span>
+          </div>
+          <div className="preview-subtitle">Tổng lãi đảm bảo tại đáo hạn</div>
         </div>
       </div>
 

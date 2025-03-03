@@ -480,3 +480,80 @@ button {
   cursor: not-allowed;
 }
 
+.stake-amount-group {
+  display: flex;
+  align-items: stretch;
+  padding: 1rem;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.stake-input-section {
+  width: 50%;
+  padding-right: 2rem;
+  border-right: 1px solid var(--border-color);
+}
+
+.stake-interest-preview {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 2rem;
+}
+
+.preview-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.preview-amount {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.preview-amount strong {
+  font-weight: 600;
+}
+
+.token-symbol {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: normal;
+}
+
+.preview-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Update existing form-group styles */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: var(--surface-color);
+}
+
+.form-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(14, 59, 224, 0.1);
+}
+
