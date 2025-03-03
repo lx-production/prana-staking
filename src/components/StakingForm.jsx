@@ -124,17 +124,17 @@ const StakingForm = () => {
           />
         </div>
         <div className="stake-interest-preview">
-          <div className="preview-label">Expected Return</div>
+          <div className="preview-label">Guaranteed interest</div>
           <div className="preview-amount">
             <strong>{getProjectedInterest()}</strong>
             <span className="token-symbol">PRANA</span>
           </div>
-          <div className="preview-subtitle">Tổng lãi đảm bảo tại đáo hạn</div>
+          <div className="preview-subtitle">Tổng lãi suất đảm bảo khi đáo hạn</div>
         </div>
       </div>
 
       <div className="form-group">
-        <div id="duration-label" className="form-label">Duration & APR</div>
+        <div id="duration-label" className="form-label">Chọn kỳ hạn</div>
         <DurationSlider
           durationIndex={durationIndex}
           setDurationIndex={setDurationIndex}
