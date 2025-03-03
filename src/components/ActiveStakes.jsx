@@ -4,6 +4,7 @@ import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
 import { useActiveStakes } from '../hooks/useActiveStakes';
+import { useInterestCalculator } from '../hooks/useInterestCalculator';
 
 function ActiveStakes() {
   const { address, isConnected } = useAccount();
@@ -49,9 +50,11 @@ function ActiveStakes() {
     calculateInterest,
     actionLoading,
     error,
-    success,
-    calculateTotalGuaranteedInterest
+    success
   } = useActiveStakes(refetchStakes);
+  
+  // Get interest calculator functions
+  const { calculateTotalGuaranteedInterest } = useInterestCalculator();
   
   // Process stakes data
   useEffect(() => {
