@@ -3,7 +3,7 @@ import { useAccount, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
-import { useActiveStakes } from '../hooks/useActiveStakes';
+import useActiveStakes from '../hooks/useActiveStakes';
 import { useInterestCalculator } from '../hooks/useInterestCalculator';
 
 function ActiveStakes() {
@@ -152,7 +152,7 @@ function ActiveStakes() {
                 <div className="progress-info">
                   <div className="progress-text">{stake.progress}% Complete</div>
                   <div className="interest-text">Tổng lãi suất tích lũy: <strong>{calculateInterest(stake)}</strong> PRANA</div>
-                  <div className="interest-text">Tổng lãi đảm bảo tại đáo hạn: <strong>{calculateTotalGuaranteedInterest(stake)}</strong> PRANA</div>
+                  <div className="interest-text">Tổng lãi suất đảm bảo tại đáo hạn: <strong>{calculateTotalGuaranteedInterest(stake)}</strong> PRANA</div>
                 </div>
               </div>
               
@@ -161,9 +161,9 @@ function ActiveStakes() {
                   <button 
                     className="btn-secondary"
                     onClick={() => handleClaimInterest(stake.id)}
-                    disabled={actionLoading === stake.id}
+                    disabled={actionLoading.stakeId === stake.id}
                   >
-                    {actionLoading === stake.id ? (
+                    {actionLoading.stakeId === stake.id && actionLoading.action === 'claimInterest' ? (
                       <><span className="spinner">↻</span>Processing...</>
                     ) : 'Claim Interest'}
                   </button>
@@ -173,9 +173,9 @@ function ActiveStakes() {
                   <button 
                     className="btn-secondary"
                     onClick={() => handleUnstake(stake.id)}
-                    disabled={actionLoading === stake.id}
+                    disabled={actionLoading.stakeId === stake.id}
                   >
-                    {actionLoading === stake.id ? (
+                    {actionLoading.stakeId === stake.id && actionLoading.action === 'unstake' ? (
                       <><span className="spinner">↻</span>Processing...</>
                     ) : 'Unstake'}
                   </button>
@@ -185,10 +185,10 @@ function ActiveStakes() {
                   <button 
                     className="btn-danger"
                     onClick={() => handleEarlyUnstake(stake.id)}
-                    disabled={actionLoading === stake.id}
+                    disabled={actionLoading.stakeId === stake.id}
                     title="10% penalty applies for early unstaking"
                   >
-                    {actionLoading === stake.id ? (
+                    {actionLoading.stakeId === stake.id && actionLoading.action === 'unstakeEarly' ? (
                       <><span className="spinner">↻</span>Processing...</>
                     ) : 'Unstake Early (10% penalty)'}
                   </button>

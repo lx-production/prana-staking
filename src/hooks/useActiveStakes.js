@@ -9,9 +9,9 @@ import { useInterestCalculator } from './useInterestCalculator';
  * @param {function} refetchStakes - Function to refetch stakes after an action
  * @returns {object} - Contains action functions and states
  */
-export const useActiveStakes = (refetchStakes) => {
+const useActiveStakes = (refetchStakes) => {
   const { writeContractAsync } = useWriteContract();
-  const [actionLoading, setActionLoading] = useState(null);
+  const [actionLoading, setActionLoading] = useState({ stakeId: null, action: null });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
@@ -65,7 +65,7 @@ export const useActiveStakes = (refetchStakes) => {
   // Handle unstake
   const handleUnstake = async (stakeId) => {
     try {
-      setActionLoading(stakeId);
+      setActionLoading({ stakeId, action: 'unstake' });
       setError('');
       
       const txHash = await writeContractAsync({
@@ -81,7 +81,7 @@ export const useActiveStakes = (refetchStakes) => {
       console.error('Unstake error:', err);
       setError(`Failed to unstake: ${err.message}`);
     } finally {
-      setActionLoading(null);
+      setActionLoading({ stakeId: null, action: null });
     }
   };
   
@@ -92,7 +92,7 @@ export const useActiveStakes = (refetchStakes) => {
     }
     
     try {
-      setActionLoading(stakeId);
+      setActionLoading({ stakeId, action: 'unstakeEarly' });
       setError('');
       
       const txHash = await writeContractAsync({
@@ -108,14 +108,14 @@ export const useActiveStakes = (refetchStakes) => {
       console.error('Early unstake error:', err);
       setError(`Failed to unstake early: ${err.message}`);
     } finally {
-      setActionLoading(null);
+      setActionLoading({ stakeId: null, action: null });
     }
   };
   
   // Handle claim interest
   const handleClaimInterest = async (stakeId) => {
     try {
-      setActionLoading(stakeId);
+      setActionLoading({ stakeId, action: 'claimInterest' });
       setError('');
       
       const txHash = await writeContractAsync({
@@ -131,7 +131,7 @@ export const useActiveStakes = (refetchStakes) => {
       console.error('Claim interest error:', err);
       setError(`Failed to claim interest: ${err.message}`);
     } finally {
-      setActionLoading(null);
+      setActionLoading({ stakeId: null, action: null });
     }
   };
 
@@ -148,4 +148,6 @@ export const useActiveStakes = (refetchStakes) => {
     setError,
     setSuccess
   };
-}; 
+};
+
+export default useActiveStakes; 
