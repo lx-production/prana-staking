@@ -8,7 +8,7 @@ import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/con
  * @param {function} refetchStakes - Function to refetch stakes after an action
  * @returns {object} - Contains action functions and states
  */
-export const useActiveStakesActions = (refetchStakes) => {
+export const useActiveStakes = (refetchStakes) => {
   const { writeContractAsync } = useWriteContract();
   const [actionLoading, setActionLoading] = useState(null);
   const [error, setError] = useState('');
@@ -47,6 +47,26 @@ export const useActiveStakesActions = (refetchStakes) => {
     const interest = (BigInt(stake.amount) * BigInt(Math.floor(ratePerSecond * timePassed))) / BigInt(1e18);
     
     return formatUnits(interest, decimals);
+  };
+  
+  /**
+   * Calculate the total guaranteed fixed interest at maturity for a stake
+   * @param {object} stake - The stake object
+   * @returns {string} - The formatted total guaranteed interest
+   */
+  const calculateTotalGuaranteedInterest = (stake) => {
+    const PERCENT_SCALE = 100; // Same as in the contract
+    
+    // Calculate total duration in seconds
+    const totalDuration = Number(stake.duration);
+    
+    // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
+    const ratePerSecond = (Number(stake.apr) * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
+    
+    // Calculate total interest at maturity: principal * ratePerSecond * totalDuration / 1e18
+    const totalInterest = (BigInt(stake.amount) * BigInt(Math.floor(ratePerSecond * totalDuration))) / BigInt(1e18);
+    
+    return formatUnits(totalInterest, decimals);
   };
 
   // Reset messages after 10 seconds
@@ -138,6 +158,7 @@ export const useActiveStakesActions = (refetchStakes) => {
     handleEarlyUnstake,
     handleClaimInterest,
     calculateInterest,
+    calculateTotalGuaranteedInterest,
     currentTime,
     actionLoading,
     error,

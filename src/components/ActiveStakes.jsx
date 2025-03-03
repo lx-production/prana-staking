@@ -3,7 +3,7 @@ import { useAccount, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
-import { useActiveStakesActions } from '../hooks/useActiveStakesActions';
+import { useActiveStakes } from '../hooks/useActiveStakes';
 
 function ActiveStakes() {
   const { address, isConnected } = useAccount();
@@ -49,8 +49,9 @@ function ActiveStakes() {
     calculateInterest,
     actionLoading,
     error,
-    success
-  } = useActiveStakesActions(refetchStakes);
+    success,
+    calculateTotalGuaranteedInterest
+  } = useActiveStakes(refetchStakes);
   
   // Process stakes data
   useEffect(() => {
@@ -68,6 +69,8 @@ function ActiveStakes() {
           option.seconds === Number(stake.duration)
         ) || { label: `${Math.floor(Number(stake.duration) / 86400)} Days` };
         
+        const totalGuaranteedInterest = calculateTotalGuaranteedInterest(stake);
+        
         return {
           ...stake,
           amountFormatted: formatUnits(stake.amount, decimals),
@@ -78,7 +81,8 @@ function ActiveStakes() {
           canUnstake,
           canUnstakeEarly,
           canClaimInterest,
-          progress: Math.min(100, Math.floor(((now - Number(stake.startTime)) / Number(stake.duration)) * 100))
+          progress: Math.min(100, Math.floor(((now - Number(stake.startTime)) / Number(stake.duration)) * 100)),
+          totalGuaranteedInterest: formatUnits(totalGuaranteedInterest, decimals)
         };
       });
       
@@ -145,6 +149,7 @@ function ActiveStakes() {
                 <div className="progress-info">
                   <div className="progress-text">{stake.progress}% Complete</div>
                   <div className="interest-text">Tổng lãi suất tích lũy: <strong>{calculateInterest(stake)}</strong> PRANA</div>
+                  <div className="interest-text">Tổng lãi đảm bảo tại đáo hạn: <strong>{calculateTotalGuaranteedInterest(stake)}</strong> PRANA</div>
                 </div>
               </div>
               
