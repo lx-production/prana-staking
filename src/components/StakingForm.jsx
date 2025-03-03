@@ -5,6 +5,7 @@ import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/con
 import { DURATION_OPTIONS } from '../constants/durations';
 import DurationSlider from './DurationSlider';
 import useStaking from '../hooks/useStaking';
+import { useInterestCalculator } from '../hooks/useInterestCalculator';
 
 const StakingForm = () => {
   const { address, isConnected } = useAccount();
@@ -16,6 +17,9 @@ const StakingForm = () => {
   
   // Hardcoded decimals value instead of fetching from blockchain
   const decimals = 9;
+  
+  // Use interest calculator
+  const { calculateTotalGuaranteedInterest } = useInterestCalculator();
 
   // Data fetching
   const { data: minStake } = useReadContract({
@@ -70,6 +74,29 @@ const StakingForm = () => {
     setAmount
   });
 
+  // Function to calculate the projected interest based on current inputs
+  const getProjectedInterest = () => {
+    // If amount is empty or not a valid number, return "0"
+    if (!amount || isNaN(parseFloat(amount))) return "0";
+    
+    // Get the selected duration option
+    const selectedDuration = DURATION_OPTIONS[durationIndex];
+    
+    // Check if we have APR data for this duration
+    const apr = aprs[selectedDuration.seconds.toString()];
+    if (!apr) return "0";
+    
+    // Create a mock stake object with current input values
+    const mockStake = {
+      amount: (parseFloat(amount) * 10**decimals).toString(), // Convert to wei format
+      duration: selectedDuration.seconds.toString(),
+      apr: apr.toString(),
+      startTime: Math.floor(Date.now() / 1000).toString()
+    };
+    
+    return calculateTotalGuaranteedInterest(mockStake);
+  };
+
   // Render
   if (!isConnected) return null;
   
@@ -94,6 +121,9 @@ const StakingForm = () => {
           disabled={loading}
           className="form-input"
         />
+        <div className="interest-text">
+          Tổng lãi đảm bảo tại đáo hạn: <strong>{getProjectedInterest()}</strong> PRANA
+        </div>
       </div>
 
       <div className="form-group">
