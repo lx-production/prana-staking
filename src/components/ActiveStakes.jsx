@@ -151,8 +151,8 @@ function ActiveStakes() {
                 </div>
                 <div className="progress-info">
                   <div className="progress-text">{stake.progress}% Complete</div>
-                  <div className="interest-text">Tổng lãi suất tích lũy: <strong>{calculateInterest(stake)}</strong> PRANA</div>
-                  <div className="interest-text">Tổng lãi suất đảm bảo tại đáo hạn: <strong>{calculateTotalGuaranteedInterest(stake)}</strong> PRANA</div>
+                  <div className="interest-text">Tổng lãi suất tích lũy: <strong>≈ {calculateInterest(stake)}</strong> PRANA</div>
+                  <div className="interest-text">Tổng lãi suất dự kiến khi đáo hạn: <strong>≈ {calculateTotalGuaranteedInterest(stake)}</strong> PRANA</div>
                 </div>
               </div>
               

@@ -75,7 +75,7 @@ const useActiveStakes = (refetchStakes) => {
         args: [stakeId]
       });
       
-      setSuccess(`Unstaked successfully! Unstake thành công! Transaction: ${txHash.slice(0, 10)}...`);
+      setSuccess(`Unstaked successfully! Unstake thành công! Transaction: ${txHash}`);
       refetchStakes();
     } catch (err) {
       console.error('Unstake error:', err);
