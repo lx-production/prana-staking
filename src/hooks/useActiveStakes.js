@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useWriteContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
+import { useInterestCalculator } from './useInterestCalculator';
 
 /**
  * Custom hook for staking-related actions
@@ -14,6 +15,7 @@ export const useActiveStakes = (refetchStakes) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
+  const { calculateTotalGuaranteedInterest } = useInterestCalculator();
   
   // PRANA's decimals. Hardcoded to 9
   const decimals = 9;
@@ -49,26 +51,6 @@ export const useActiveStakes = (refetchStakes) => {
     return formatUnits(interest, decimals);
   };
   
-  /**
-   * Calculate the total guaranteed fixed interest at maturity for a stake
-   * @param {object} stake - The stake object
-   * @returns {string} - The formatted total guaranteed interest
-   */
-  const calculateTotalGuaranteedInterest = (stake) => {
-    const PERCENT_SCALE = 100; // Same as in the contract
-    
-    // Calculate total duration in seconds
-    const totalDuration = Number(stake.duration);
-    
-    // Calculate rate per second: (APR / PERCENT_SCALE) / (365 * 24 * 60 * 60)
-    const ratePerSecond = (Number(stake.apr) * 1e18) / (PERCENT_SCALE * 365 * 24 * 60 * 60);
-    
-    // Calculate total interest at maturity: principal * ratePerSecond * totalDuration / 1e18
-    const totalInterest = (BigInt(stake.amount) * BigInt(Math.floor(ratePerSecond * totalDuration))) / BigInt(1e18);
-    
-    return formatUnits(totalInterest, decimals);
-  };
-
   // Reset messages after 10 seconds
   useEffect(() => {
     if (error || success) {
