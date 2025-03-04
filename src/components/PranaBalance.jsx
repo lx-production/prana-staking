@@ -37,7 +37,7 @@ const PranaBalance = () => {
         <p className="error">Error loading balance: {error.message || 'Unknown error'}</p>
       ) : (
         <p className="balance">
-          {balance ? formatUnits(balance, decimals) : '0'} PRANA
+          {balance ? formatUnits(balance, decimals) : '0'} <span className="token-symbol">PRANA</span>
         </p>
       )}
     </div>
