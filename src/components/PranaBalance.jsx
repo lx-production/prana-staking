@@ -30,7 +30,7 @@ const PranaBalance = () => {
 
   return (
     <div className="balance-container">
-      <h3>PRANA Balance</h3>
+      <h3>My PRANA Balance</h3>
       {isLoading ? (
         <p>Loading balance...</p>
       ) : error ? (

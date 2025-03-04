@@ -106,17 +106,36 @@ button {
   font-weight: 600;
   color: var(--primary-color);
   font-size: 16px;
+  margin-top: 0.5rem;
 }
 
 .interest-balance-container {
-  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
 }
 
-.interest-balance-container h3 {
+.balance-half {
+  flex: 1;
+  background-color: var(--surface-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--card-shadow);
+  padding: 1.5rem;
+}
+
+.balance-display {
+  text-align: center;
+}
+
+.balance-display h3 {
   margin-bottom: 0.75rem;
   color: var(--text-primary);
+}
+
+.balance-display p {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
 }
 
 .balance-description {

@@ -5,6 +5,7 @@ import PranaBalance from './components/PranaBalance';
 import StakingForm from './components/StakingForm';
 import ActiveStakes from './components/ActiveStakes';
 import InterestContractBalance from './components/InterestContractBalance';
+import StakingContractBalance from './components/StakingContractBalance';
 
 function App() {
   const { isConnected } = useAccount();
@@ -12,18 +13,27 @@ function App() {
   return (
     <div className="container">
       <header className="header">
-        <h1>PRANA Staking</h1>
+        <h1>PRANA Staking - Heo Đất PRANA 3.0</h1>        
         <ConnectWallet />
       </header>
       
       <main>
         {isConnected ? (
-          <div className="card">
-            <InterestContractBalance />
-            <PranaBalance />
-            <StakingForm />
-            <ActiveStakes />
-          </div>
+          <>
+            <div className="interest-balance-container">
+              <div className="balance-half">
+                <InterestContractBalance />
+              </div>
+              <div className="balance-half">
+                <StakingContractBalance />
+              </div>
+            </div>
+            <div className="card">
+              <PranaBalance />
+              <StakingForm />
+              <ActiveStakes />
+            </div>
+          </>
         ) : (
           <div className="card">
             <h2>Welcome to PRANA Staking</h2>

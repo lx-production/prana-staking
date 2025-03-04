@@ -37,8 +37,7 @@ const InterestContractBalance = () => {
             {balance ? formatUnits(balance, decimals) : '0'} PRANA
           </p>
           <p className="balance-description">
-            Tổng số PRANA khả dụng để trả lãi suất.<br/>
-            (Đủ trả lãi suất cho 500.000 PRANA trong 1 năm.)
+            Tổng số PRANA khả dụng để trả lãi suất. (Đủ trả lãi suất cho 500.000 PRANA trong 1 năm.)
           </p>
         </div>
       )}
