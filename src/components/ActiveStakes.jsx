@@ -102,7 +102,7 @@ function ActiveStakes() {
   
   return (
     <div className="active-stakes-container">
-      <h3>Active Stakes</h3>
+      <h3>My Active Stakes</h3>
       
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}

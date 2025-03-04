@@ -124,7 +124,7 @@ button {
 }
 
 .balance-display {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .balance-display h3 {
@@ -136,11 +136,12 @@ button {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--primary-color);
+  margin-bottom: 1rem;
 }
 
 .balance-description {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
 }
 

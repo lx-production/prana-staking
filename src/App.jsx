@@ -18,25 +18,24 @@ function App() {
       </header>
       
       <main>
+        <div className="interest-balance-container">
+          <div className="balance-half">
+            <InterestContractBalance />
+          </div>
+          <div className="balance-half">
+            <StakingContractBalance />
+          </div>
+        </div>
+        
         {isConnected ? (
-          <>
-            <div className="interest-balance-container">
-              <div className="balance-half">
-                <InterestContractBalance />
-              </div>
-              <div className="balance-half">
-                <StakingContractBalance />
-              </div>
-            </div>
-            <div className="card">
-              <PranaBalance />
-              <StakingForm />
-              <ActiveStakes />
-            </div>
-          </>
+          <div className="card">
+            <PranaBalance />
+            <StakingForm />
+            <ActiveStakes />
+          </div>
         ) : (
           <div className="card">
-            <h2>Welcome to PRANA Staking</h2>
+            <h2>Welcome to PRANA Staking - Heo Đất PRANA 3.0</h2>
             <p>Connect your wallet to get started.</p>
           </div>
         )}

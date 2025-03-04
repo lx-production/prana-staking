@@ -1,48 +1,33 @@
 import React from 'react';
-import { useAccount, useReadContract } from 'wagmi';
+import { useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { INTEREST_CONTRACT_ADDRESS, PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI } from '../constants/contracts';
 
-const InterestContractBalance = () => {
-  const { isConnected } = useAccount();
-  
-  const { data: balance, isLoading, error } = useReadContract({
+function InterestContractBalance() {
+  // Read the PRANA balance of the interest contract
+  const { data: balance } = useReadContract({
     address: PRANA_TOKEN_ADDRESS,
     abi: PRANA_TOKEN_ABI,
     functionName: 'balanceOf',
     args: [INTEREST_CONTRACT_ADDRESS],
-    enabled: isConnected,
   });
 
-  // Log any errors for debugging
-  if (error) {
-    console.error("Interest contract balance error:", error);
-  }
-
-  // Hardcoded decimals value for PRANA token
   const decimals = 9;
 
-  if (!isConnected) return null;
+  // Format the balance with 9 decimals (PRANA token decimals)
+  const formattedBalance = balance ? formatUnits(balance, decimals) : '0';
 
   return (
-    <div className="interest-balance-container">
+    <div className="balance-display">
       <h3>Interest Contract Balance</h3>
-      {isLoading ? (
-        <p>Loading balance...</p>
-      ) : error ? (
-        <p className="error">Error loading balance: {error.message || 'Unknown error'}</p>
-      ) : (
-        <div>
-          <p className="balance">
-            {balance ? formatUnits(balance, decimals) : '0'} PRANA
-          </p>
-          <p className="balance-description">
-            Tổng số PRANA khả dụng để trả lãi suất. (Đủ trả lãi suất cho 500.000 PRANA trong 1 năm.)
-          </p>
-        </div>
-      )}
+      <p><a href="https://polygonscan.com/token/0x928277e774f34272717eadfafc3fd802dafbd0f5?a=0x2eb3f2e678c20bd73634a895858d3c1e8afa9cef" target="_blank" rel="noopener noreferrer">
+      {parseFloat(formattedBalance).toLocaleString()}</a> PRANA</p>
+      <label className="balance-description">
+        Tổng số PRANA khả dụng để trả lãi suất.<br /> 
+        (Đủ trả lãi suất cho 500,000 PRANA trong 1 năm.)
+      </label>
     </div>
   );
-};
+}
 
 export default InterestContractBalance; 
