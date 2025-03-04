@@ -82,7 +82,7 @@ button {
   background-color: var(--surface-color);
   border-radius: 0.5rem;
   box-shadow: var(--card-shadow);
-  padding: 3rem;
+  padding: 7%;
   margin-bottom: 1rem;
 }
 
@@ -132,6 +132,18 @@ button {
 @media (max-width: 500px) {
   .interest-balance-container {
     flex-direction: column;
+  }
+
+  .stake-amount-group {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .stake-input-section,
+  .stake-interest-preview {
+    width: 100% !important;
+    padding: 0;
+    max-width: 100%;
   }
 }
 
@@ -551,8 +563,7 @@ button {
 
 .stake-input-section {
   width: 50%;
-  padding-right: 2rem;
-  border-right: 1px solid var(--border-color);
+  margin-right: 2rem;
 }
 
 .stake-interest-preview {
@@ -560,7 +571,6 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 2rem;
 }
 
 .preview-label {
