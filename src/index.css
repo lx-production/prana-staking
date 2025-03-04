@@ -30,6 +30,10 @@ body {
   line-height: 1.5;
 }
 
+h3 {
+  font-size: x-large;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -101,6 +105,24 @@ button {
 .balance {
   font-weight: 600;
   color: var(--primary-color);
+  font-size: 16px;
+}
+
+.interest-balance-container {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.interest-balance-container h3 {
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.balance-description {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 
 .loading {

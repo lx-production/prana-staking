@@ -4,6 +4,7 @@ import ConnectWallet from './components/ConnectWallet';
 import PranaBalance from './components/PranaBalance';
 import StakingForm from './components/StakingForm';
 import ActiveStakes from './components/ActiveStakes';
+import InterestContractBalance from './components/InterestContractBalance';
 
 function App() {
   const { isConnected } = useAccount();
@@ -18,6 +19,7 @@ function App() {
       <main>
         {isConnected ? (
           <div className="card">
+            <InterestContractBalance />
             <PranaBalance />
             <StakingForm />
             <ActiveStakes />
