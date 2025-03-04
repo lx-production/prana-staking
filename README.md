@@ -80,11 +80,12 @@ Smart contract related files can be found in the `contracts/` directory. Make su
 
 ## License
 
-This project is proprietary software belonging to PRANA Protocol.
+Smart contracts Author: prana@triethocduongpho
+MIT license.
 
 ## Contact
 
-PRANA Protocol - [Add contact information]
+PRANA Protocol - [thdp@triethocduongpho.net]
 
 ---
 
