@@ -1,6 +1,15 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0e3be0',
+    },
+  },
+});
 
 const DurationSlider = ({ 
   durationIndex, 
@@ -11,36 +20,38 @@ const DurationSlider = ({
   labelId 
 }) => {
   return (
-    <Box sx={{ width: '100%', padding: '20px 10px' }}>
-      <Slider
-        aria-labelledby={labelId}
-        aria-label="Staking Duration"
-        value={durationIndex}
-        onChange={(_, newValue) => setDurationIndex(Number(newValue))}
-        step={null}
-        marks={durationOptions.map((option, index) => ({
-          value: index,
-          label: `${option.days} Days`
-        }))}
-        min={0}
-        max={durationOptions.length - 1}
-        valueLabelDisplay="on"
-        valueLabelFormat={(value) => {
-          const option = durationOptions[value];
-          return aprs[option.seconds] !== undefined ? `${aprs[option.seconds]}% APR` : '';
-        }}
-        disabled={disabled}
-        sx={{
-          '& .MuiSlider-markLabel': {
-            whiteSpace: 'pre-line',
-            textAlign: 'center',
-          },
-          '.MuiSlider-valueLabel': {
-            backgroundColor: 'primary.main',
-          }
-        }}
-      />
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ width: '100%', padding: '20px 10px' }}>
+        <Slider
+          aria-labelledby={labelId}
+          aria-label="Staking Duration"
+          value={durationIndex}
+          onChange={(_, newValue) => setDurationIndex(Number(newValue))}
+          step={null}
+          marks={durationOptions.map((option, index) => ({
+            value: index,
+            label: `${option.days} Days`
+          }))}
+          min={0}
+          max={durationOptions.length - 1}
+          valueLabelDisplay="on"
+          valueLabelFormat={(value) => {
+            const option = durationOptions[value];
+            return aprs[option.seconds] !== undefined ? `${aprs[option.seconds]}% APR` : '';
+          }}
+          disabled={disabled}
+          sx={{
+            '& .MuiSlider-markLabel': {
+              whiteSpace: 'pre-line',
+              textAlign: 'center',
+            },
+            '.MuiSlider-valueLabel': {
+              backgroundColor: 'primary.main',
+            }
+          }}
+        />
+      </Box>
+    </ThemeProvider>
   );
 };
 

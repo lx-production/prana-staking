@@ -133,7 +133,9 @@ button {
   background-color: var(--surface-color);
   border-radius: 0.5rem;
   box-shadow: var(--card-shadow);
-  padding: 1.5rem;
+  padding-top: 2rem;
+  padding-left: 3rem;
+  padding-bottom: 1.5rem;
 }
 
 .balance-display h3 {
