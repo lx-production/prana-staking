@@ -168,7 +168,7 @@ const StakingForm = () => {
         >
           {loading && status === 'pending' ? (
             <><span className="spinner">↻</span>Staking...</>
-          ) : 'Stake'}
+          ) : 'Stake PRANA'}
         </button>
       </div>
     </div>
