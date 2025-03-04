@@ -17,7 +17,7 @@ function StakingContractBalance() {
 
   return (
     <div className="balance-display">
-      <h3>Protocal Total Value Staked</h3>
+      <h3>Protocol Total Value Staked</h3>
       <p>{parseFloat(formattedBalance).toLocaleString()} <span className="token-symbol">PRANA</span></p>
     </div>
   );
