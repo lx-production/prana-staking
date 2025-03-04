@@ -14,7 +14,7 @@ const ConnectWallet = () => {
       <div className="wallet-container">
         <span className="address">{`${address.slice(0, 6)}...${address.slice(-4)}`}</span>
         <button 
-          className="btn-secondary"
+          className="btn-disconnect"
           onClick={() => disconnect()}
         >
           Disconnect

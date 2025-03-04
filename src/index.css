@@ -67,6 +67,13 @@ button {
   border-radius: 0.375rem;
 }
 
+.btn-disconnect {
+  background-color: var(--danger-color);
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+}
+
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
 }
@@ -75,7 +82,7 @@ button {
   background-color: var(--surface-color);
   border-radius: 0.5rem;
   box-shadow: var(--card-shadow);
-  padding: 1.5rem;
+  padding: 3rem;
   margin-bottom: 1rem;
 }
 
@@ -115,16 +122,18 @@ button {
   padding-bottom: 1.5rem;
 }
 
+@media (max-width: 500px) {
+  .interest-balance-container {
+    flex-direction: column;
+  }
+}
+
 .balance-half {
   flex: 1;
   background-color: var(--surface-color);
   border-radius: 0.5rem;
   box-shadow: var(--card-shadow);
   padding: 1.5rem;
-}
-
-.balance-display {
-  /* text-align: center; */
 }
 
 .balance-display h3 {

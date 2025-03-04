@@ -36,7 +36,7 @@ function App() {
         ) : (
           <div className="card">
             <h2>Welcome to PRANA Staking - Heo Đất PRANA 3.0</h2>
-            <p>Connect your wallet to get started.</p>
+            <p>Connect your wallet to get started. Kết nối Ví của bạn để bắt đầu.</p>
           </div>
         )}
       </main>

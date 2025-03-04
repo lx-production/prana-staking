@@ -18,7 +18,7 @@ function StakingContractBalance() {
   return (
     <div className="balance-display">
       <h3>Protocal Total Value Staked</h3>
-      <p><a href="https://polygonscan.com/token/0x928277e774f34272717eadfafc3fd802dafbd0f5?a=0x30236dB04c0C4E88bFA0c1c926CDaA47780100d0" target="_blank" rel="noopener noreferrer">{parseFloat(formattedBalance).toLocaleString()}</a> PRANA</p>
+      <p>{parseFloat(formattedBalance).toLocaleString()} <span className="token-symbol">PRANA</span></p>
     </div>
   );
 }

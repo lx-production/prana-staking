@@ -20,8 +20,7 @@ function InterestContractBalance() {
   return (
     <div className="balance-display">
       <h3>Interest Contract Balance</h3>
-      <p><a href="https://polygonscan.com/token/0x928277e774f34272717eadfafc3fd802dafbd0f5?a=0x2eb3f2e678c20bd73634a895858d3c1e8afa9cef" target="_blank" rel="noopener noreferrer">
-      {parseFloat(formattedBalance).toLocaleString()}</a> PRANA</p>
+      <p>{parseFloat(formattedBalance).toLocaleString()} <span className="token-symbol">PRANA</span></p>
       <label className="balance-description">
         Tổng số PRANA khả dụng để trả lãi suất.<br /> 
         (Đủ trả lãi suất cho 500,000 PRANA trong 1 năm.)
