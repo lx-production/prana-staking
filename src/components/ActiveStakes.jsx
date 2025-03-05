@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
-import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
-import { DURATION_OPTIONS } from '../constants/durations';
 import useActiveStakes from '../hooks/useActiveStakes';
 import { useInterestCalculator } from '../hooks/useInterestCalculator';
 
@@ -11,27 +9,7 @@ function ActiveStakes() {
   
   // State
   const [stakes, setStakes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  
-  // PRANA's decimals. Hardcoded decimals value instead of fetching from blockchain
-  const decimals = 9;
-  
-  // Helper function to format timestamps to Vietnam time with 24h format
-  const formatVietnamTime = (timestamp) => {
-    // Create date from timestamp (multiply by 1000 to convert seconds to milliseconds)
-    const date = new Date(Number(timestamp) * 1000);
-    
-    // Format for Vietnam timezone (UTC+7)
-    return date.toLocaleString('en-GB', { 
-      timeZone: 'Asia/Ho_Chi_Minh',
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-  };
+  const [loading, setLoading] = useState(false); 
   
   // Fetch user's stakes
   const { data: stakesData, isLoading: isStakesLoading, refetch: refetchStakes } = useReadContract({
@@ -43,7 +21,8 @@ function ActiveStakes() {
   });
   
   // Get staking actions from custom hook
-  const { 
+  const {
+    processedStakes,
     handleUnstake, 
     handleEarlyUnstake, 
     handleClaimInterest,
@@ -51,47 +30,17 @@ function ActiveStakes() {
     actionLoading,
     error,
     success
-  } = useActiveStakes(refetchStakes);
+  } = useActiveStakes(stakesData, refetchStakes);
   
   // Get interest calculator functions
   const { calculateTotalGuaranteedInterest } = useInterestCalculator();
   
   // Process stakes data
   useEffect(() => {
-    if (stakesData) {
-      const processedStakes = stakesData.map(stake => {
-        const now = Math.floor(Date.now() / 1000);
-        const endTime = stake.startTime + stake.duration;
-        const isExpired = now > endTime;
-        const canUnstake = isExpired;
-        const canUnstakeEarly = !isExpired;
-        const canClaimInterest = true; // Always allow claiming interest
-        
-        // Find the corresponding duration option
-        const durationOption = DURATION_OPTIONS.find(option => 
-          option.seconds === Number(stake.duration)
-        ) || { label: `${Math.floor(Number(stake.duration) / 86400)} Days` };
-        
-        const totalGuaranteedInterest = calculateTotalGuaranteedInterest(stake);
-        
-        return {
-          ...stake,
-          amountFormatted: formatUnits(stake.amount, decimals),
-          startTimeFormatted: formatVietnamTime(stake.startTime),
-          endTimeFormatted: formatVietnamTime(endTime),
-          durationLabel: durationOption.label,
-          isExpired,
-          canUnstake,
-          canUnstakeEarly,
-          canClaimInterest,
-          progress: Math.min(100, Math.floor(((now - Number(stake.startTime)) / Number(stake.duration)) * 100)),
-          totalGuaranteedInterest: formatUnits(totalGuaranteedInterest, decimals)
-        };
-      });
-      
+    if (stakesData) {      
       setStakes(processedStakes);
     }
-  }, [stakesData, decimals]);
+  }, [stakesData]);
   
   // Set loading state
   useEffect(() => {

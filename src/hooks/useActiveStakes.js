@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useWriteContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { useInterestCalculator } from './useInterestCalculator';
+import { DURATION_OPTIONS } from '../constants/durations';
 
 /**
  * Custom hook for staking-related actions
+ * @param {Array} stakesData - Raw stakes data from the contract
  * @param {function} refetchStakes - Function to refetch stakes after an action
  * @returns {object} - Contains action functions and states
  */
-const useActiveStakes = (refetchStakes) => {
+const useActiveStakes = (stakesData, refetchStakes) => {
   const { writeContractAsync } = useWriteContract();
   const [actionLoading, setActionLoading] = useState({ stakeId: null, action: null });
   const [error, setError] = useState('');
@@ -19,6 +21,23 @@ const useActiveStakes = (refetchStakes) => {
   
   // PRANA's decimals. Hardcoded to 9
   const decimals = 9;
+
+  // Helper function to format timestamps to Vietnam time with 24h format
+  const formatVietnamTime = (timestamp) => {
+    // Create date from timestamp (multiply by 1000 to convert seconds to milliseconds)
+    const date = new Date(Number(timestamp) * 1000);
+    
+    // Format for Vietnam timezone (UTC+7)
+    return date.toLocaleString('en-GB', { 
+      timeZone: 'Asia/Ho_Chi_Minh',
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  };
   
   // Update time every second to recalculate interest
   useEffect(() => {
@@ -28,6 +47,43 @@ const useActiveStakes = (refetchStakes) => {
     
     return () => clearInterval(timer);
   }, []);
+
+  // Process stakes data
+  const processedStakes = useMemo(() => {
+    if (!stakesData) return [];
+    return stakesData.map((stake) => {
+      const now = currentTime;
+      const endTime = stake.startTime + stake.duration;
+      const isExpired = now > endTime;
+      const canUnstake = isExpired;
+      const canUnstakeEarly = !isExpired;
+      const canClaimInterest = true; // Always allow claiming interest
+
+      // Find the corresponding duration option
+      const durationOption = DURATION_OPTIONS.find(
+        (option) => option.seconds === Number(stake.duration)
+      ) || { label: `${Math.floor(Number(stake.duration) / 86400)} Days` };
+
+      const totalGuaranteedInterest = calculateTotalGuaranteedInterest(stake);
+
+      return {
+        ...stake,
+        amountFormatted: formatUnits(stake.amount, decimals),
+        startTimeFormatted: formatVietnamTime(stake.startTime),
+        endTimeFormatted: formatVietnamTime(endTime),
+        durationLabel: durationOption.label,
+        isExpired,
+        canUnstake,
+        canUnstakeEarly,
+        canClaimInterest,
+        progress: Math.min(
+          100,
+          Math.floor(((now - Number(stake.startTime)) / Number(stake.duration)) * 100)
+        ),
+        totalGuaranteedInterest: formatUnits(totalGuaranteedInterest, decimals),
+      };
+    });
+  }, [stakesData, currentTime, calculateTotalGuaranteedInterest]);
   
   // Helper function to calculate interest
   const calculateInterest = (stake) => {
@@ -136,6 +192,7 @@ const useActiveStakes = (refetchStakes) => {
   };
 
   return {
+    processedStakes,
     handleUnstake,
     handleEarlyUnstake,
     handleClaimInterest,
