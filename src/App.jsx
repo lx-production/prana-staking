@@ -41,49 +41,30 @@ function App() {
         )}
       </main>
       
-      <footer style={{ 
-        display: 'flex', 
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: '1rem',
-        gap: '1rem'
-      }}>
+      <footer className="footer">
         <p>©2025 PRANA Protocol</p>
         <a
-            href="https://polygonscan.com/address/0x30236dB04c0C4E88bFA0c1c926CDaA47780100d0"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ 
-              color: 'inherit',
-              textDecoration: 'none',
-              fontSize: '1rem'
-            }}
-          >
-            Staking Contract
-          </a>
-          <a
-            href="https://polygonscan.com/address/0x2eb3f2e678c20bd73634a895858d3c1e8afa9cef#tokentxns"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ 
-              color: 'inherit',
-              textDecoration: 'none',
-              fontSize: '1rem'
-            }}
-          >
-            Interest Contract
-          </a>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>          
+          href="https://polygonscan.com/address/0x30236dB04c0C4E88bFA0c1c926CDaA47780100d0"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-link"
+        >
+          Staking Contract
+        </a>
+        <a
+          href="https://polygonscan.com/address/0x2eb3f2e678c20bd73634a895858d3c1e8afa9cef#tokentxns"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-link"
+        >
+          Interest Contract
+        </a>
+        <div className="footer-links">          
           <a 
             href="https://github.com/lx-production/prana-staking"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ 
-              color: 'inherit', 
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center'
-            }}
+            className="footer-github"
           >
             <svg
               height="24"
