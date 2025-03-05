@@ -300,6 +300,56 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         return userStakes[staker];
     }
 
+    // Function to get all active stakers (users with at least one active stake)
+    function getActiveStakers() external view returns (address[] memory) {
+        // First, count the number of active stakers to size our return array
+        uint256 activeStakerCount = 0;
+        
+        for (uint256 i = 0; i < stakers.length; i++) {
+            address staker = stakers[i];
+            Stake[] storage stakes = userStakes[staker];
+            
+            // Check if this staker has at least one active stake
+            bool isActive = false;
+            for (uint256 j = 0; j < stakes.length; j++) {
+                if (block.timestamp < stakes[j].startTime + stakes[j].duration) {
+                    isActive = true;
+                    break;
+                }
+            }
+            
+            if (isActive) {
+                activeStakerCount++;
+            }
+        }
+        
+        // Create return array of the correct size
+        address[] memory activeStakers = new address[](activeStakerCount);
+        
+        // Fill the array with active stakers
+        uint256 currentIndex = 0;
+        for (uint256 i = 0; i < stakers.length; i++) {
+            address staker = stakers[i];
+            Stake[] storage stakes = userStakes[staker];
+            
+            // Check if this staker has at least one active stake
+            bool isActive = false;
+            for (uint256 j = 0; j < stakes.length; j++) {
+                if (block.timestamp < stakes[j].startTime + stakes[j].duration) {
+                    isActive = true;
+                    break;
+                }
+            }
+            
+            if (isActive) {
+                activeStakers[currentIndex] = staker;
+                currentIndex++;
+            }
+        }
+        
+        return activeStakers;
+    }
+
     // Function to get all current APRs
     function getAllAPRs() external view returns (uint256[] memory durations, uint8[] memory aprs) {
         durations = new uint256[](6);
