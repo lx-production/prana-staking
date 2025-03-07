@@ -41,7 +41,7 @@ const DurationSlider = ({
           step={null}
           marks={durationOptions.map((option, index) => ({
             value: index,
-            label: `${option.days} Days`
+            label: `${option.days} ngày`
           }))}
           min={0}
           max={durationOptions.length - 1}
