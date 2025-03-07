@@ -13,6 +13,7 @@
   --success-color: #10b981;
   --border-color: #e2e8f0;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --input-focus-shadow: 0 0 0 2px rgba(14, 59, 224, 0.1);
 }
 
 /* Dark theme variables */
@@ -30,6 +31,7 @@
   --success-color: #34d399;
   --border-color: #334155;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --input-focus-shadow: 0 0 0 2px rgba(79, 110, 242, 0.2);
 }
 
 /* Theme switcher styles */
@@ -138,6 +140,7 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
+  margin-top: 1rem;
 }
 
 .wallet-info {
@@ -295,11 +298,13 @@ button {
   font-size: 1rem;
   transition: border-color 0.2s ease;
   background-color: var(--surface-color);
+  color: var(--text-primary);
 }
 
 .staking-form input[type="text"]:focus {
   border-color: var(--primary-color);
   outline: none;
+  box-shadow: var(--input-focus-shadow);
 }
 
 .staking-form input[type="text"]::placeholder {
@@ -667,12 +672,13 @@ button {
   font-size: 1rem;
   transition: all 0.2s ease;
   background-color: var(--surface-color);
+  color: var(--text-primary);
 }
 
 .form-input:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(14, 59, 224, 0.1);
+  box-shadow: var(--input-focus-shadow);
 }
 
 /* Footer styles */
