@@ -115,10 +115,14 @@ const StakingForm = () => {
               // Only allow numbers and decimal points
               const value = e.target.value;
               if (value === '' || /^[0-9]*[.]?[0-9]*$/.test(value)) {
-                setAmount(value);
+                // Check if the value is within the max limit
+                const numValue = parseFloat(value);
+                if (value === '' || (numValue <= 10000000)) {
+                  setAmount(value);
+                }
               }
             }}
-            placeholder={`Min: ${formattedMinStake}`}
+            placeholder={`Min: ${formattedMinStake} | Max: 10,000,000`}
             disabled={loading}
             className="form-input"
           />
