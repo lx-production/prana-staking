@@ -269,11 +269,18 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
             // Loop through each stake of the staker
             for (uint256 j = 0; j < stakes.length; j++) {
                 Stake storage currentStake = stakes[j];
+                uint256 stakeEndTime = currentStake.startTime + currentStake.duration;
                 
-                // Only include active stakes that haven't matured
-                if (block.timestamp < currentStake.startTime + currentStake.duration) {
-                    // Calculate remaining time until maturity
-                    uint256 remainingTime = (currentStake.startTime + currentStake.duration) - currentStake.lastClaimTime;
+                // Check if stake is either:
+                // 1. Active (not yet matured)
+                // 2. Matured but within grace period and has unclaimed interest
+                if (block.timestamp < stakeEndTime || 
+                    (block.timestamp <= stakeEndTime + gracePeriod && currentStake.lastClaimTime < stakeEndTime)) {
+                    
+                    // For active stakes, calculate interest from lastClaim to maturity
+                    // For matured stakes, calculate interest from lastClaim to the stake end time
+                    uint256 effectiveEndTime = stakeEndTime;
+                    uint256 remainingTime = effectiveEndTime - currentStake.lastClaimTime;
                     
                     // Break down the calculation into smaller, safer parts
                     // APR is in percentage points (e.g., 5 for 5%)

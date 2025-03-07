@@ -8,6 +8,7 @@ import { polygon } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
 import { http } from 'viem'
 import { ThemeProvider } from './context/ThemeContext'
+import { startSpinningFavicon } from './spinningFavicon'
 
 // Create a client for React Query
 const queryClient = new QueryClient()
@@ -27,6 +28,9 @@ const config = createConfig({
     [polygon.id]: http(alchemyUrl)
   }
 })
+
+// Start the spinning favicon animation
+startSpinningFavicon();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -158,7 +158,7 @@ const useActiveStakes = (stakesData, refetchStakes) => {
         args: [stakeId]
       });
       
-      setSuccess(`Unstaked early successfully! Transaction: ${txHash.slice(0, 10)}...`);
+      setSuccess(`Unstaked early successfully! Transaction: ${txHash}`);
       refetchStakes();
     } catch (err) {
       console.error('Early unstake error:', err);
