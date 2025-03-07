@@ -23,7 +23,7 @@
   --secondary-color: #00d973;
   --secondary-hover: #00b85f;
   --background-color: #0b121d;
-  --surface-color: #0b1425;
+  --surface-color: #0c192e;
   --text-primary: #fbfbfb;
   --text-secondary: #eeeeee;
   --text-light: #94a3b8;
@@ -297,7 +297,7 @@ button {
   border-radius: 0.375rem;
   font-size: 1rem;
   transition: border-color 0.2s ease;
-  background-color: var(--surface-color);
+  background-color: var(--surface-color) !important;
   color: var(--text-primary);
 }
 
