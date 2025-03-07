@@ -7,6 +7,7 @@ import { createConfig, WagmiProvider } from 'wagmi'
 import { polygon } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
 import { http } from 'viem'
+import { ThemeProvider } from './context/ThemeContext'
 
 // Create a client for React Query
 const queryClient = new QueryClient()
@@ -31,7 +32,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>,

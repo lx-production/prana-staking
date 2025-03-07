@@ -1,4 +1,5 @@
 :root {
+  /* Light theme variables */
   --primary-color: #0e3be0;
   --primary-hover: #0029be;
   --secondary-color: #00c368;
@@ -12,6 +13,53 @@
   --success-color: #10b981;
   --border-color: #e2e8f0;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme variables */
+[data-theme='dark'] {
+  --primary-color: #4f6ef2;
+  --primary-hover: #3b5ce0;
+  --secondary-color: #00d973;
+  --secondary-hover: #00b85f;
+  --background-color: #121c2c;
+  --surface-color: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-light: #94a3b8;
+  --danger-color: #f87171;
+  --success-color: #34d399;
+  --border-color: #334155;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme switcher styles */
+.theme-switcher {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-bottom: 1rem;
+}
+
+.btn-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--card-shadow);
+}
+
+.btn-theme-toggle:hover {
+  background-color: var(--background-color);
+}
+
+.btn-theme-toggle svg {
+  width: 20px;
+  height: 20px;
 }
 
 * {
@@ -90,8 +138,6 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border-color);
 }
 
 .wallet-info {

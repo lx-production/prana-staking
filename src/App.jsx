@@ -6,6 +6,7 @@ import StakingForm from './components/StakingForm';
 import ActiveStakes from './components/ActiveStakes';
 import InterestContractBalance from './components/InterestContractBalance';
 import StakingContractBalance from './components/StakingContractBalance';
+import ThemeSwitcher from './components/ThemeSwitcher';
 
 function App() {
   const { isConnected } = useAccount();
@@ -16,6 +17,8 @@ function App() {
         <h1>PRANA Staking</h1>        
         <ConnectWallet />
       </header>
+      
+      <ThemeSwitcher />
       
       <main>
         <div className="interest-balance-container">
