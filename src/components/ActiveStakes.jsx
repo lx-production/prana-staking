@@ -61,7 +61,7 @@ function ActiveStakes() {
           <span className="spinner">↻</span> Loading stakes...
         </div>
       ) : stakes.length === 0 ? (
-        <p className="no-stakes-message">You don't have any active stakes yet.</p>
+        <p className="no-stakes-message">You don't have any active stakes yet. Hiện bạn không có stake nào.</p>
       ) : (
         <div className="stakes-list">
           {stakes.map((stake) => (

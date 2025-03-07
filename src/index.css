@@ -79,6 +79,10 @@ body {
   color: var(--text-primary);
 }
 
+h2 {
+  margin-bottom: 1rem;
+}
+
 h3 {
   font-size: x-large;
 }
@@ -466,7 +470,6 @@ button {
 
 .no-stakes-message {
   color: var(--text-secondary);
-  text-align: center;
   padding: 2rem 0;
 }
 
