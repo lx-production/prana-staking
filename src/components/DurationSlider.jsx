@@ -2,14 +2,19 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useTheme } from '../context/ThemeContext';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#0e3be0',
+// Create theme-specific Material UI themes
+const createMuiTheme = (mode) => {
+  return createTheme({
+    palette: {
+      mode: mode,
+      primary: {
+        main: mode === 'dark' ? '#4f6ef2' : '#0e3be0',
+      },
     },
-  },
-});
+  });
+};
 
 const DurationSlider = ({ 
   durationIndex, 
@@ -19,8 +24,14 @@ const DurationSlider = ({
   disabled,
   labelId 
 }) => {
+  // Get current theme from our ThemeContext
+  const { theme } = useTheme();
+  
+  // Select the appropriate MUI theme based on our app's theme
+  const muiTheme = createMuiTheme(theme === 'dark' ? 'dark' : 'light');
+  
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={muiTheme}>
       <Box sx={{ width: '100%', padding: '20px 10px' }}>
         <Slider
           aria-labelledby={labelId}
