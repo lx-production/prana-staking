@@ -134,7 +134,7 @@ export const PRANA_TOKEN_ABI = [
 ];
 
 // Staking Contract
-export const STAKING_CONTRACT_ADDRESS = '0x30236dB04c0C4E88bFA0c1c926CDaA47780100d0'; // Replace with actual contract address
+export const STAKING_CONTRACT_ADDRESS = '0x714425A4F4d624ef83fEff810a0EEC30B0847868'; // Replace with actual contract address
 
 export const STAKING_CONTRACT_ABI = [
   // View functions
@@ -179,24 +179,7 @@ export const STAKING_CONTRACT_ABI = [
     "stateMutability": "view",
     "inputs": [{"name": "duration", "type": "uint256"}],
     "outputs": [{"type": "uint8"}]
-  },
-  {
-    "name": "userStakes",
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": [
-      {"name": "user", "type": "address"},
-      {"name": "index", "type": "uint256"}
-    ],
-    "outputs": [
-      {"name": "id", "type": "uint32"},
-      {"name": "amount", "type": "uint256"},
-      {"name": "startTime", "type": "uint256"},
-      {"name": "duration", "type": "uint256"},
-      {"name": "apr", "type": "uint8"},
-      {"name": "lastClaimTime", "type": "uint256"}
-    ]
-  },
+  },  
   {
     "name": "getAllAPRs",
     "type": "function",
@@ -303,7 +286,7 @@ export const STAKING_CONTRACT_ABI = [
 ];
 
 // Interest Contract
-export const INTEREST_CONTRACT_ADDRESS = '0x2eb3F2E678c20BD73634a895858D3c1E8aFA9ceF'; // Replace with actual contract address
+export const INTEREST_CONTRACT_ADDRESS = '0x1DE1E9BEF781fb3440C2c22E8ca1bF61BD26f69d'; // Replace with actual contract address
 
 export const INTEREST_CONTRACT_ABI = [
   // View functions

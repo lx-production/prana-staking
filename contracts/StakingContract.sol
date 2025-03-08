@@ -22,7 +22,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     uint256 public MIN_STAKE = 100 * 1e9;             // 100 PRANA with 9 decimals
     uint256 public constant DAY = 86400;              // 24 hours in seconds
     uint8 public constant PERCENT_SCALE = 100;        // For percentage scaling (since APRs are integers like 10 for 10%)
-    uint256 public gracePeriod = 7 * DAY;             // 7 days grace period after stake expiry
+    uint256 public gracePeriod = 7 * DAY;             // 7 days grace period after stake expires
     uint8 public earlyUnstakePenaltyPercent = 10;     // 10% penalty for unstaking early
 
     // Mapping of staking duration (in seconds) to APR (e.g., 10 for 10%)
@@ -33,11 +33,11 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
 
     // Structure to store each user's stake
     struct Stake {
-        uint32 id;                 // Unique identifier for the stake
-        uint256 amount;            // Principal staked
+        uint32 id;                  // Unique identifier for the stake
+        uint256 amount;             // Principal staked
         uint256 startTime;          // Stake start timestamp
         uint256 duration;           // Staking duration in seconds
-        uint8 apr;                 // APR at the time of staking (e.g., 5 for 5%)
+        uint8 apr;                  // APR at the time of staking (e.g., 5 for 5%)
         uint256 lastClaimTime;      // Last time interest was claimed
     }
 
@@ -48,7 +48,6 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     event StakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 duration, uint8 apr, uint256 startTime);
     event InterestClaimed(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 timePassed, uint256 claimTime);
     event UnstakedPRANA(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 duration, uint256 unstakeTime);
-    event ForfeitedInterestTransferred(address indexed user, uint32 indexed stakeId, uint256 amount, uint256 stakeEndTime, uint256 forfeitTime);
 
     // Emergency pause functionality
     bool public paused;    // false by default, save gas by not setting explicitly
@@ -67,12 +66,12 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         PRANA = IPranaToken(_pranaAddress);
         InterestContract = IInterestContract(_interestContract);    // deploy InterestContract first
 
-        aprByDuration[1 * DAY] = 5;     // 5% APR
-        aprByDuration[7 * DAY] = 6;     // 6% APR
-        aprByDuration[30 * DAY] = 7;    // 7% APR
-        aprByDuration[90 * DAY] = 8;    // 8% APR
-        aprByDuration[180 * DAY] = 9;   // 9% APR
-        aprByDuration[365 * DAY] = 10;  // 10% APR
+        aprByDuration[1 * DAY] = 7;      // 7% APR
+        aprByDuration[7 * DAY] = 8;      // 8% APR
+        aprByDuration[30 * DAY] = 9;     // 9% APR
+        aprByDuration[90 * DAY] = 10;    // 10% APR
+        aprByDuration[180 * DAY] = 11;   // 11% APR
+        aprByDuration[365 * DAY] = 12;   // 10% APR
     }    
 
     // @dev This function is used to stake PRANA with a permit signature. Better UX for users.
@@ -257,7 +256,7 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         }
     }
 
-    // Function to calculate total interest needed for all active stakes
+    // Function to calculate total interest needed for all active stakes + Matured, within grace period, and has unclaimed interest
     function totalInterestNeeded() external view returns (uint256) {
         uint256 totalInterest = 0;
         
@@ -305,56 +304,6 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
     // Function to get all stakes for a specific staker
     function getStakerStakes(address staker) external view returns (Stake[] memory) {
         return userStakes[staker];
-    }
-
-    // Function to get all active stakers (users with at least one active stake)
-    function getActiveStakers() external view returns (address[] memory) {
-        // First, count the number of active stakers to size our return array
-        uint256 activeStakerCount = 0;
-        
-        for (uint256 i = 0; i < stakers.length; i++) {
-            address staker = stakers[i];
-            Stake[] storage stakes = userStakes[staker];
-            
-            // Check if this staker has at least one active stake
-            bool isActive = false;
-            for (uint256 j = 0; j < stakes.length; j++) {
-                if (block.timestamp < stakes[j].startTime + stakes[j].duration) {
-                    isActive = true;
-                    break;
-                }
-            }
-            
-            if (isActive) {
-                activeStakerCount++;
-            }
-        }
-        
-        // Create return array of the correct size
-        address[] memory activeStakers = new address[](activeStakerCount);
-        
-        // Fill the array with active stakers
-        uint256 currentIndex = 0;
-        for (uint256 i = 0; i < stakers.length; i++) {
-            address staker = stakers[i];
-            Stake[] storage stakes = userStakes[staker];
-            
-            // Check if this staker has at least one active stake
-            bool isActive = false;
-            for (uint256 j = 0; j < stakes.length; j++) {
-                if (block.timestamp < stakes[j].startTime + stakes[j].duration) {
-                    isActive = true;
-                    break;
-                }
-            }
-            
-            if (isActive) {
-                activeStakers[currentIndex] = staker;
-                currentIndex++;
-            }
-        }
-        
-        return activeStakers;
     }
 
     // Function to get all current APRs
@@ -410,6 +359,11 @@ contract PranaStakingContract is Ownable, ReentrancyGuard {
         require(_percent <= 20, "Penalty too high");
         earlyUnstakePenaltyPercent = _percent;
     }    
+
+    // Function to get all addresses that have active or matured but not unstaked stakes
+    function getStakers() external view returns (address[] memory) {
+        return stakers;
+    }
 
     // Rescue accidentally sent tokens
     function rescueToken(address token, uint256 amount) external onlyOwner {
