@@ -272,7 +272,7 @@ button {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -283,7 +283,7 @@ button {
   display: block;
   margin-bottom: 1rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -630,7 +630,7 @@ button {
 
 .preview-label {
   font-size: 16px;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
   font-weight: 500;
 }
