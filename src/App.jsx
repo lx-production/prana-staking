@@ -47,7 +47,7 @@ function App() {
       <footer className="footer">
         <p>©2025 PRANA Protocol</p>
         <a
-          href="https://polygonscan.com/address/0x30236dB04c0C4E88bFA0c1c926CDaA47780100d0"
+          href="https://polygonscan.com/address/0x714425A4F4d624ef83fEff810a0EEC30B0847868"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-link"
@@ -55,7 +55,7 @@ function App() {
           Staking Contract
         </a>
         <a
-          href="https://polygonscan.com/address/0x2eb3f2e678c20bd73634a895858d3c1e8afa9cef#tokentxns"
+          href="https://polygonscan.com/address/0x1DE1E9BEF781fb3440C2c22E8ca1bF61BD26f69d#tokentxns"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-link"
