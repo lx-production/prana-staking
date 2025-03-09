@@ -18,7 +18,12 @@ function App() {
         <ConnectWallet />
       </header>
       
-      <ThemeSwitcher />
+      <div className="theme-slogan-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div className="slogan">
+          <h4>Engineered to outperform</h4>
+        </div>
+        <ThemeSwitcher />
+      </div>
       
       <main>
         <div className="interest-balance-container">
