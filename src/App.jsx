@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="container">
       <header className="header">
-        <h1>PRANA Staking</h1>        
+        <h1 style={{ fontWeight: '800' }}>PRANA Staking</h1>        
         <ConnectWallet />
       </header>
       
