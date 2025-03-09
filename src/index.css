@@ -689,6 +689,7 @@ button {
 
 /* Footer styles */
 .footer {
+  font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -699,7 +700,6 @@ button {
 .footer-link {
   color: inherit;
   text-decoration: none;
-  font-size: 1rem;
 }
 
 .footer-github {

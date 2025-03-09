@@ -75,8 +75,8 @@ function App() {
             className="footer-github"
           >
             <svg
-              height="24"
-              width="24"
+              height="20"
+              width="20"
               viewBox="0 0 16 16"
               fill="currentColor"
             >
