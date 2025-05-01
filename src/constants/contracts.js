@@ -146,6 +146,13 @@ export const STAKING_CONTRACT_ABI = [
     "outputs": [{"type": "address"}]
   },
   {
+    "name": "totalInterestNeeded",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{"type": "uint256"}]
+  },
+  {
     "name": "MIN_STAKE",
     "type": "function",
     "stateMutability": "view",

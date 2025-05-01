@@ -91,6 +91,13 @@ h4 {
   font-weight: 500;
 }
 
+h5 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -215,7 +222,7 @@ button {
 }
 
 .balance-display h3 {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
 
