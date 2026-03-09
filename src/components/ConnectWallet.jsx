@@ -1,5 +1,6 @@
 import React from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 const ConnectWallet = () => {
   const { connect, connectors, isLoading, error } = useConnect();
@@ -26,7 +27,7 @@ const ConnectWallet = () => {
   return (
     <button
       className="btn-primary"
-      onClick={() => connect({ connector: injectedConnector })}
+      onClick={() => connect({ connector: injectedConnector, chainId: polygon.id })}
       disabled={isLoading}
     >
       {isLoading ? (

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useWriteContract, useSignTypedData, usePublicClient } from 'wagmi';
+import { useWriteContract, useSignTypedData, usePublicClient, useChainId, useSwitchChain } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 import { parseUnits } from 'viem';
 import { PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI, STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 
@@ -21,7 +22,10 @@ const useStaking = ({
 
   const { writeContractAsync, status } = useWriteContract();
   const { isPending: isSignPending, signTypedDataAsync } = useSignTypedData();
-  const publicClient = usePublicClient();
+  // Always read token data (nonces, etc.) from Polygon since PRANA is deployed there.
+  const publicClient = usePublicClient({ chainId: polygon.id });
+  const activeChainId = useChainId();
+  const { switchChainAsync } = useSwitchChain();
 
   // Unified loading state
   useEffect(() => {
@@ -56,6 +60,17 @@ const useStaking = ({
     setSuccess('');
     
     try {
+      // Permit signatures must be signed on the same chainId as the EIP-712 domain.
+      // If the wallet is on the wrong network, viem will throw "active chainId is different..."
+      if (activeChainId !== polygon.id) {
+        try {
+          await switchChainAsync({ chainId: polygon.id });
+        } catch {
+          setError('Please switch your wallet network to Polygon Mainnet (chainId 137) and try again.');
+          return;
+        }
+      }
+
       // Convert amount to wei
       const amountInWei = parseUnits(amount, decimals);
       
@@ -76,7 +91,7 @@ const useStaking = ({
       const domain = {
         name: 'Prana_v2',
         version: '1',
-        chainId: 137, // Polygon Mainnet
+        chainId: polygon.id, // Polygon Mainnet
         verifyingContract: PRANA_TOKEN_ADDRESS,
       };
       
