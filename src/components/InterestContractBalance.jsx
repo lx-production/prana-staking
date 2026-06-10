@@ -1,4 +1,3 @@
-import React from 'react';
 import { useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { INTEREST_CONTRACT_ADDRESS, PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI, STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';

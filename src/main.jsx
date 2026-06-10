@@ -1,4 +1,4 @@
-import React from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
@@ -33,7 +33,7 @@ const config = createConfig({
 startSpinningFavicon();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
@@ -41,5 +41,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </ThemeProvider>
       </QueryClientProvider>
     </WagmiProvider>
-  </React.StrictMode>,
+  </StrictMode>,
 ) 

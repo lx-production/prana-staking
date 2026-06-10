@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import useActiveStakes from '../hooks/useActiveStakes';
@@ -40,7 +40,7 @@ function ActiveStakes() {
     if (stakesData) {      
       setStakes(processedStakes);
     }
-  }, [stakesData]);
+  }, [stakesData, processedStakes]);
   
   // Set loading state
   useEffect(() => {
@@ -61,7 +61,7 @@ function ActiveStakes() {
           <span className="spinner">↻</span> Loading stakes...
         </div>
       ) : stakes.length === 0 ? (
-        <p className="no-stakes-message">You don't have any active stakes yet. Hiện bạn không có stake nào.</p>
+        <p className="no-stakes-message">You do not have any active stakes yet. Hiện bạn không có stake nào.</p>
       ) : (
         <div className="stakes-list">
           {stakes.map((stake) => (
