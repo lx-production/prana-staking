@@ -1,10 +1,11 @@
-import { useConnect, useAccount, useDisconnect } from 'wagmi';
+import { useConnect, useConnection, useConnectors, useDisconnect } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 const ConnectWallet = () => {
-  const { connect, connectors, isLoading } = useConnect();
-  const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+  const connect = useConnect();
+  const connectors = useConnectors();
+  const { address, isConnected } = useConnection();
+  const disconnect = useDisconnect();
 
   // Find the injected connector (MetaMask)
   const injectedConnector = connectors.find(c => c.id === 'injected');
@@ -15,7 +16,7 @@ const ConnectWallet = () => {
         <span className="address">{`${address.slice(0, 6)}...${address.slice(-4)}`}</span>
         <button 
           className="btn-disconnect"
-          onClick={() => disconnect()}
+          onClick={() => disconnect.mutate()}
         >
           Disconnect
         </button>
@@ -26,10 +27,10 @@ const ConnectWallet = () => {
   return (
     <button
       className="btn-primary"
-      onClick={() => connect({ connector: injectedConnector, chainId: polygon.id })}
-      disabled={isLoading}
+      onClick={() => connect.mutate({ connector: injectedConnector, chainId: polygon.id })}
+      disabled={connect.isPending || !injectedConnector}
     >
-      {isLoading ? (
+      {connect.isPending ? (
         <>
           <span className="loading"></span>
           Connecting...

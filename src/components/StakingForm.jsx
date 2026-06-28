@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useReadContract } from 'wagmi';
+import { useConnection, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import { DURATION_OPTIONS } from '../constants/durations';
@@ -8,7 +8,7 @@ import useStaking from '../hooks/useStaking';
 import { useInterestCalculator } from '../hooks/useInterestCalculator';
 
 const StakingForm = () => {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useConnection();
 
   // State
   const [amount, setAmount] = useState('');
@@ -26,7 +26,9 @@ const StakingForm = () => {
     address: STAKING_CONTRACT_ADDRESS,
     abi: STAKING_CONTRACT_ABI,
     functionName: 'MIN_STAKE',
-    enabled: isConnected,
+    query: {
+      enabled: isConnected,
+    },
   });
   
   // Fetch all APRs at once
@@ -34,7 +36,9 @@ const StakingForm = () => {
     address: STAKING_CONTRACT_ADDRESS,
     abi: STAKING_CONTRACT_ABI,
     functionName: 'getAllAPRs',
-    enabled: isConnected,
+    query: {
+      enabled: isConnected,
+    },
   });
   
   // Process APR data when it's available

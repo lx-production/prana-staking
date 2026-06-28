@@ -20,17 +20,19 @@ const useStaking = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const { writeContractAsync, status } = useWriteContract();
-  const { isPending: isSignPending, signTypedDataAsync } = useSignTypedData();
+  const writeContract = useWriteContract();
+  const signTypedData = useSignTypedData();
   // Always read token data (nonces, etc.) from Polygon since PRANA is deployed there.
   const publicClient = usePublicClient({ chainId: polygon.id });
   const activeChainId = useChainId();
-  const { switchChainAsync } = useSwitchChain();
+  const switchChain = useSwitchChain();
+  const isSignPending = signTypedData.isPending;
+  const status = writeContract.status;
 
   // Unified loading state
   useEffect(() => {
-    setLoading(isSignPending || status === 'pending');
-  }, [isSignPending, status]);
+    setLoading(isSignPending || writeContract.isPending);
+  }, [isSignPending, writeContract.isPending]);
 
   // Reset messages after 10 seconds
   useEffect(() => {
@@ -64,7 +66,7 @@ const useStaking = ({
       // If the wallet is on the wrong network, viem will throw "active chainId is different..."
       if (activeChainId !== polygon.id) {
         try {
-          await switchChainAsync({ chainId: polygon.id });
+          await switchChain.mutateAsync({ chainId: polygon.id });
         } catch {
           setError('Please switch your wallet network to Polygon Mainnet (chainId 137) and try again.');
           return;
@@ -114,7 +116,7 @@ const useStaking = ({
       };
       
       // Sign the permit message
-      const signature = await signTypedDataAsync({
+      const signature = await signTypedData.mutateAsync({
         domain,
         types,
         primaryType: 'Permit',
@@ -176,7 +178,7 @@ const useStaking = ({
     try {
       // Execute the transaction without overriding gas settings
       // Let MetaMask handle gas estimation for better compatibility
-      const txHash = await writeContractAsync({
+      const txHash = await writeContract.mutateAsync({
         address: STAKING_CONTRACT_ADDRESS,
         abi: STAKING_CONTRACT_ABI,
         functionName: 'stakeWithPermit',

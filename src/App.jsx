@@ -1,4 +1,4 @@
-import { useAccount } from 'wagmi';
+import { useConnection } from 'wagmi';
 import ConnectWallet from './components/ConnectWallet';
 import PranaBalance from './components/PranaBalance';
 import StakingForm from './components/StakingForm';
@@ -8,7 +8,7 @@ import StakingContractBalance from './components/StakingContractBalance';
 import ThemeSwitcher from './components/ThemeSwitcher';
 
 function App() {
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
 
   return (
     <div className="container">

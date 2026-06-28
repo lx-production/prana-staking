@@ -1,9 +1,9 @@
-import { useAccount, useReadContract } from 'wagmi';
+import { useConnection, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { PRANA_TOKEN_ADDRESS, PRANA_TOKEN_ABI } from '../constants/contracts';
 
 const PranaBalance = () => {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useConnection();
   
   // Log the address for debugging
   console.log("Connected address:", address);
@@ -14,7 +14,9 @@ const PranaBalance = () => {
     abi: PRANA_TOKEN_ABI,
     functionName: 'balanceOf',
     args: [address],
-    enabled: isConnected && !!address,
+    query: {
+      enabled: isConnected && !!address,
+    },
   });
 
   // Log any errors for debugging

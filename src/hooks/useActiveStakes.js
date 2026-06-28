@@ -12,7 +12,7 @@ import { DURATION_OPTIONS } from '../constants/durations';
  * @returns {object} - Contains action functions and states
  */
 const useActiveStakes = (stakesData, refetchStakes) => {
-  const { writeContractAsync } = useWriteContract();
+  const writeContract = useWriteContract();
   const [actionLoading, setActionLoading] = useState({ stakeId: null, action: null });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -124,7 +124,7 @@ const useActiveStakes = (stakesData, refetchStakes) => {
       setActionLoading({ stakeId, action: 'unstake' });
       setError('');
       
-      const txHash = await writeContractAsync({
+      const txHash = await writeContract.mutateAsync({
         address: STAKING_CONTRACT_ADDRESS,
         abi: STAKING_CONTRACT_ABI,
         functionName: 'unstake',
@@ -151,7 +151,7 @@ const useActiveStakes = (stakesData, refetchStakes) => {
       setActionLoading({ stakeId, action: 'unstakeEarly' });
       setError('');
       
-      const txHash = await writeContractAsync({
+      const txHash = await writeContract.mutateAsync({
         address: STAKING_CONTRACT_ADDRESS,
         abi: STAKING_CONTRACT_ABI,
         functionName: 'unstakeEarly',
@@ -174,7 +174,7 @@ const useActiveStakes = (stakesData, refetchStakes) => {
       setActionLoading({ stakeId, action: 'claimInterest' });
       setError('');
       
-      const txHash = await writeContractAsync({
+      const txHash = await writeContract.mutateAsync({
         address: STAKING_CONTRACT_ADDRESS,
         abi: STAKING_CONTRACT_ABI,
         functionName: 'claimInterest',

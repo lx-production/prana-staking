@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useReadContract } from 'wagmi';
+import { useConnection, useReadContract } from 'wagmi';
 import { STAKING_CONTRACT_ADDRESS, STAKING_CONTRACT_ABI } from '../constants/contracts';
 import useActiveStakes from '../hooks/useActiveStakes';
 import { useInterestCalculator } from '../hooks/useInterestCalculator';
 
 function ActiveStakes() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useConnection();
   
   // State
   const [stakes, setStakes] = useState([]);
@@ -17,7 +17,9 @@ function ActiveStakes() {
     abi: STAKING_CONTRACT_ABI,
     functionName: 'getStakerStakes',
     args: [address],
-    enabled: isConnected && !!address,
+    query: {
+      enabled: isConnected && !!address,
+    },
   });
   
   // Get staking actions from custom hook
