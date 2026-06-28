@@ -49,7 +49,7 @@ function App() {
       </main>
       
       <footer className="footer">
-        <p>©2025 PRANA Protocol</p>
+        <p>©{new Date().getFullYear()} PRANA Protocol</p>
         <a
           href="https://polygonscan.com/address/0x714425A4F4d624ef83fEff810a0EEC30B0847868"
           target="_blank"
